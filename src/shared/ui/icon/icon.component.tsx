@@ -3,6 +3,8 @@ import { Suspense, lazy } from 'react'
 const Icons = {
   // icon: lazy(() => import('@assets/icons/icon.svg?react')),
   favicon: lazy(() => import('@assets/icons/favicon.svg?react')),
+  sun: lazy(() => import('@assets/icons/sun.svg?react')),
+  moon: lazy(() => import('@assets/icons/moon.svg?react')),
 } as const
 
 export type IconName = keyof typeof Icons
