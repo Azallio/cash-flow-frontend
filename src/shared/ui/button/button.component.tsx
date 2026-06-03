@@ -3,7 +3,7 @@ import type { Ui } from '@shared/types'
 import clsx from 'clsx'
 
 const ColorClassNames = {
-  primary: 'text-white bg-glaucous-400 hover:bg-ubc-blue-500',
+  primary: 'text-white bg-primary hover:bg-ubc-blue-500',
   secondary: 'text-glaucous-400 bg-glaucous-50 hover:text-black hover:bg-white',
   none: '',
 } as const

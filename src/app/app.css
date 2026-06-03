@@ -2,10 +2,71 @@
 
 html {
   font-size: 1vw;
+  font-family: 'SF Pro Display', sans-serif;
+  height: 100%;
+}
+
+body {
+  height: 100%;
 }
 
 @media screen and (max-width: 768px) {
   html {
-    font-size: 5vw;
+    font-size: calc(16 / 768 * 100vw);
   }
+}
+
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+
+  --text: #1f2937;
+  --text-muted: #6b7280;
+
+  --border: #e5e7eb;
+
+  --primary: #e11d48;
+
+  --success: #65d94d;
+  --info: #22d3ee;
+  --accent: #8b5cf6;
+}
+
+[data-theme='dark'] {
+  --bg: #121417;
+  --surface: #1a1d23;
+
+  --text: #ffffff;
+  --text-muted: #9ca3af;
+
+  --border: #2a2f38;
+
+  --primary: #FA003F;
+
+  --success: #7cff5a;
+  --info: #35d9f7;
+  --accent: #9b6cff;
+}
+
+@theme {
+  --font-sf-pro: 'SF Pro Display', ui-sans-serif, system-ui, sans-serif;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+
+  --color-border: var(--border);
+
+  --color-primary: var(--primary);
+
+  --color-success: var(--success);
+  --color-info: var(--info);
+  --color-accent: var(--accent);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
 }
