@@ -1,4 +1,4 @@
-import { login } from '../api/login'
+import { login } from '../api/post-login.api'
 import { tokenStorage } from '../lib/token-storage'
 import type { AuthUser } from '../type/auth-user'
 

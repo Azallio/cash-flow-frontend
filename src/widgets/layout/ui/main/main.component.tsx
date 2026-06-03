@@ -1,7 +1,9 @@
-type Props = React.PropsWithChildren<{}>
+type Props = React.PropsWithChildren<{
+  className?: string
+}>
 
 export function Main(props: Props) {
-  const { children } = props
+  const { children, className } = props
 
-  return <main>{children}</main>
+  return <main className={className}>{children}</main>
 }

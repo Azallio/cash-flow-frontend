@@ -1,5 +1,5 @@
 import { SharedUi, type SharedTypes } from '@shared'
-import { login } from '@units/auth/api'
+import { useAuth } from '@shared/service/provider/auth-provider.component'
 import clsx from 'clsx'
 import { useState } from 'react'
 
@@ -7,6 +7,7 @@ type Props = SharedTypes.Ui.PropsWithClassName<{}>
 
 export const AuthForm = (props: Props) => {
   const { className, ...restProps } = props
+  const { login } = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -17,13 +18,7 @@ export const AuthForm = (props: Props) => {
 
     try {
       setIsLoading(true)
-
-      const data = await login({
-        email,
-        password,
-      })
-
-      console.log(data)
+      await login(email, password)
     } catch (error) {
       console.error(error)
     } finally {

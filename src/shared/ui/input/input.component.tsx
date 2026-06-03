@@ -1,6 +1,6 @@
 import { TextInput } from '@mantine/core'
 import type { SharedTypes } from '@shared'
-import { inputVariantClassNames } from '@shared/lib/consts/input-classname'
+import { inputVariantClassNames } from '@shared/lib/consts/input-classname.const'
 
 type Props = SharedTypes.Ui.PropsWithClassName<{
   label?: string

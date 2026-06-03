@@ -9,9 +9,12 @@ export const Header = (props: Props) => {
   const { className, ...restProps } = props
 
   return (
-    <div className={clsx(className, 'flex items-center justify-between px-16 py-4')} {...restProps}>
-      <h1 className="text-3xl font-bold">Cash Flow App</h1>
-      <SharedUi.ThemeToggle />
+    <div className={clsx(className, 'flex justify-between pr-8')} {...restProps}>
+      <div className="bg-surface flex h-screen flex-col gap-4 px-4 py-4">
+        <h1 className="text-3xl font-bold whitespace-nowrap">Cash Flow App</h1>
+        <SharedUi.Navbar className="flex gap-6" />
+      </div>
+      <SharedUi.ThemeToggle className="absolute right-4 self-start pt-10" />
     </div>
   )
 }

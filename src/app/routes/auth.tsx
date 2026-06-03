@@ -1,9 +1,12 @@
 import { AuthForm } from '@widgets/auth-modal/ui'
+import { Layout } from '@widgets/layout/layout.component'
 
-export default function IndexRoute() {
+export default function AuthPage() {
   return (
-    <div className="h-full flex items-center justify-center">
-      <AuthForm />
-    </div>
+    <Layout>
+      <div className="flex h-full items-center justify-center">
+        <AuthForm />
+      </div>
+    </Layout>
   )
 }

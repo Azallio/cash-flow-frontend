@@ -1,6 +1,7 @@
 import { api } from '@shared/api/client'
-import { tokenStorage } from '@units/auth/lib'
-import type { AuthUser } from '@units/auth/type'
+import { login as loginApi } from '@units/user/api'
+import { tokenStorage } from '@units/user/lib'
+import type { AuthUser } from '@units/user/type'
 import { createContext, useContext, useEffect, useState } from 'react'
 
 interface AuthContextValue {
@@ -44,16 +45,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // 🔐 login
   const login = async (email: string, password: string) => {
-    const { data } = await api.post<{
-      accessToken: string
-      user: AuthUser
-    }>('/auth/login', {
-      email,
-      password,
-    })
+    const response = await loginApi({ email, password })
 
-    tokenStorage.set(data.accessToken)
-    setUser(data.user)
+    tokenStorage.set(response.accessToken)
+    setUser(response.user)
   }
 
   // 🚪 logout
