@@ -1,1 +1,3 @@
-export { authService } from './auth.service'
+export * as mutations from './mutations'
+export * as queries from './queries'
+

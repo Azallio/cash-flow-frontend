@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { ThemeContext, type ThemeMode } from '../context/theme.context'
 
-type Props = React.PropsWithChildren
+type Props = React.PropsWithChildren<{
+  defaultMode?: ThemeMode
+}>
 
 export const ThemeProvider = (props: Props) => {
-  const { children } = props
-  const [mode, setMode] = useState<ThemeMode>('light')
+  const { children, defaultMode } = props
+  const [mode, setMode] = useState<ThemeMode>(defaultMode ?? 'dark')
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {

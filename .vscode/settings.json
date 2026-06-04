@@ -49,5 +49,6 @@
     ".*ClassName",
     ".*ClassNames"
   ],
-  "tailwindCSS.classFunctions": ["clsx"]
+  "tailwindCSS.classFunctions": ["clsx"],
+  "cSpell.words": ["Войти", "Входим"]
 }

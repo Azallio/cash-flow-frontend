@@ -1,28 +1,23 @@
-import { api } from '@shared/api/client'
-import type { transactionType } from '@shared/types/api'
+import { SharedApi, type SharedTypes } from '@shared'
+import type { TransactionTypeEnum } from '@shared/lib/enums'
 
-export type TransactionsResponse = {
-  id: number
-  transactionType: transactionType
-  amount: number
-  description: string
-  categoryId: number
-  userId: number
-  createdAt: string
-  updatedAt: string
-}
-
-export type GetTransactionsParams = {
+export type Params = {
   take: number
   skip: number
-  transactionType?: transactionType
-  
+  transactionType: TransactionTypeEnum
 }
 
-export async function getTransactions(params?: GetTransactionsParams) {
-  const { data } = await api.get<TransactionsResponse>('/transactions', {
-    params,
-  })
 
-  return data
+
+export async function getTransactions(params: Params) {
+  return await SharedApi.baseClient.get<SharedTypes.Http.PaginatedApiResponse<TransactionsResponse[]>>(
+    '/transactions',
+    {
+      params: {
+        take: params.take,
+        skip: params.skip,
+        transactionType: params.transactionType
+      },
+    },
+  )
 }

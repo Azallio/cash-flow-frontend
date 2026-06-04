@@ -1,26 +1,24 @@
-import { api } from '@shared/api/client'
+import { SharedApi, type SharedTypes } from '@shared'
 
-export type GeneralAnalyticsResponse = {
+export type Params = {
+  startDate: string
+  endDate: string
+}
+
+type GeneralAnalyticsResponse = {
   totalIncome: number
   totalExpense: number
   netBalance: number
 }
 
-export type GetGeneralAnalyticsParams = {
-  startDate: string // ISO date-time
-  endDate: string // ISO date-time
-}
-
-type GeneralAnalyticsApiResponse = {
-  status: number
-  data: GeneralAnalyticsResponse
-  error: string | null
-}
-
-export async function getGeneralAnalytics(params?: GetGeneralAnalyticsParams) {
-  const { data } = await api.get<GeneralAnalyticsApiResponse>('/analytics/general', {
-    params,
-  })
-
-  return data.data
+export async function getGeneralAnalytics(params: Params) {
+  return await SharedApi.baseClient.get<SharedTypes.Http.BaseApiResponse<GeneralAnalyticsResponse>>(
+    '/analytics/general',
+    {
+      params: {
+        startDate: params.startDate,
+        endDate: params.endDate,
+      },
+    },
+  )
 }
