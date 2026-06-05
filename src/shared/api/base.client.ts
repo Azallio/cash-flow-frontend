@@ -6,27 +6,21 @@ import { mutexClient } from './clients/mutex.client'
 import { SessionStorageClient } from './clients/session-storage.client'
 
 const instance = axios.create({
-    baseURL: SharedLib.Consts.BASE_API_URL,
-  })
+  baseURL: SharedLib.Consts.BASE_API_URL,
+})
 
 const refreshTokens = async () => {
-  const tokens =
-    SessionStorageClient.getAuthTokens()
-    ?? LocalStorageClient.getAuthTokens()
+  const tokens = SessionStorageClient.getAuthTokens() ?? LocalStorageClient.getAuthTokens()
 
   if (!tokens) {
     clearUserAuth()
     throw new Error('No auth tokens')
   }
 
-  const { data } =
-    await instance.post<BaseApiResponse<AuthTokens>>(
-      '/auth/refresh',
-      {
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-      },
-    )
+  const { data } = await instance.post<BaseApiResponse<AuthTokens>>('/auth/refresh', {
+    accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
+  })
 
   LocalStorageClient.saveAuthTokens(data.data)
   SessionStorageClient.saveAuthTokens(data.data)
@@ -36,7 +30,7 @@ const clearUserAuth = () => {
   LocalStorageClient.clear()
   SessionStorageClient.clear()
   if (typeof window !== 'undefined') {
-    window.location.replace('/auth')
+    window.location.replace(':3001/auth')
   }
 }
 
@@ -52,10 +46,7 @@ instance.interceptors.request.use((config) => {
 })
 
 instance.interceptors.response.use(undefined, async (error) => {
-  if (
-    !axios.isAxiosError(error) ||
-    error.response?.status !== axios.HttpStatusCode.Unauthorized
-  ) {
+  if (!axios.isAxiosError(error) || error.response?.status !== axios.HttpStatusCode.Unauthorized) {
     return Promise.reject(error)
   }
 
