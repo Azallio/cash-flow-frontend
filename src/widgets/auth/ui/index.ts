@@ -1,3 +1,2 @@
-// ui segment for auth-modal
-export {};
-export { AuthForm } from './auth-form';
+export { AuthForm } from './auth-form'
+export { RegisterForm } from './register-form'

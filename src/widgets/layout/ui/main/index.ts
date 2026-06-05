@@ -1,1 +1,1 @@
-export { Main } from './main.component.tsx';
+export { Main } from './main.component'

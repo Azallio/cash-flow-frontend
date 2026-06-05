@@ -1,1 +1,1 @@
-export { Sparkline } from './sparkline.component';
+export { SparkLine } from './sparkline.component';

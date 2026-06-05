@@ -1,9 +1,5 @@
-import { AuthForm } from '@widgets/auth/ui'
+import { AuthWidget } from '@widgets/auth'
 
 export default function AuthPage() {
-  return (
-    <section className="flex h-full items-center justify-center">
-      <AuthForm />
-    </section>
-  )
+  return <AuthWidget />
 }

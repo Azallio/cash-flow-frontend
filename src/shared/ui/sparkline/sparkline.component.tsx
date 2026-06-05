@@ -7,7 +7,7 @@ type Props = SharedTypes.Ui.PropsWithClassName<{
   color?: string
 }>
 
-export const Sparkline = ({ data, color = '#22c55e', className }: Props) => {
+export const SparkLine = ({ data, color = '#22c55e', className }: Props) => {
   const gradientId = React.useId()
 
   const chartData = data

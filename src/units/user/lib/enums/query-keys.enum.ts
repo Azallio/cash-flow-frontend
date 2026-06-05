@@ -1,3 +1,5 @@
 export enum QueryKeys {
-	GENERAL_ANALYTICS = 'general-analytics',
+  GENERAL_ANALYTICS = 'general-analytics',
+  TRANSACTIONS = 'transactions',
+  CATEGORIES = 'categories',
 }

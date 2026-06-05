@@ -1,2 +1,1 @@
-// api segment for auth-modal
-export {};
+export * as Method from './method'

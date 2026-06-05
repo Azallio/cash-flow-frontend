@@ -1,0 +1,35 @@
+name: Deploy Frontend Devstand From Git
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-frontend-devstand
+      cancel-in-progress: true
+    steps:
+      - name: Deploy branch to VPS using git and Docker Compose
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > key.pem
+          chmod 600 key.pem
+          ssh -i key.pem -o StrictHostKeyChecking=no \
+          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            set -e &&
+            APP_DIR=/opt/cash-flow-frontend &&
+            REPO_URL=git@github.com:Azallio/cash-flow-frontend.git &&
+            BRANCH=development &&
+            if [ ! -d \"\$APP_DIR/.git\" ]; then
+              git clone --branch \"\$BRANCH\" \"\$REPO_URL\" \"\$APP_DIR\";
+            fi &&
+            cd \"\$APP_DIR\" &&
+            git fetch origin \"\$BRANCH\" &&
+            git checkout \"\$BRANCH\" &&
+            git pull --ff-only origin \"\$BRANCH\" &&
+            docker compose -f docker-compose.devstand.yml down --remove-orphans &&
+            docker compose -f docker-compose.devstand.yml up -d --build --force-recreate &&
+            docker compose -f docker-compose.devstand.yml ps
+          "
+          rm key.pem

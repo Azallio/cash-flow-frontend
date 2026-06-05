@@ -1,24 +1,30 @@
 import { SharedApi, type SharedTypes } from '@shared'
+import type { TransactionsResponse } from '@shared/types/http'
 
 export type Params = {
-  startDate: string
-  endDate: string
+  period?: 'day' | 'month' | 'year'
 }
 
 type GeneralAnalyticsResponse = {
+  period: string
   totalIncome: number
   totalExpense: number
   netBalance: number
+  totalIncomePercent: number
+  totalExpensePercent: number
+  netBalancePercent: number
+  profitPercent: number
+  transactions: TransactionsResponse[]
 }
 
 export async function getGeneralAnalytics(params: Params) {
-  return await SharedApi.baseClient.get<SharedTypes.Http.BaseApiResponse<GeneralAnalyticsResponse>>(
-    '/analytics/general',
+  const res = await SharedApi.baseClient.get<SharedTypes.Http.BaseApiResponse<GeneralAnalyticsResponse>>(
+    '/analytics',
     {
       params: {
-        startDate: params.startDate,
-        endDate: params.endDate,
+        period: params.period,
       },
     },
   )
+  return res.data.data
 }

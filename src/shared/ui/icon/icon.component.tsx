@@ -8,6 +8,7 @@ const Icons = {
   analytics: lazy(() => import('@assets/icons/analytics.svg?react')),
   reports: lazy(() => import('@assets/icons/reports.svg?react')),
   squares: lazy(() => import('@assets/icons/squares.svg?react')),
+  trash: lazy(() => import('@assets/icons/trash.svg?react')),
   transactions: lazy(() => import('@assets/icons/transactions.svg?react')),
 } as const
 

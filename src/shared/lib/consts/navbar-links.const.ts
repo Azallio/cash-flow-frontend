@@ -9,7 +9,7 @@ type NavbarLink = {
 
 export const navbarLinks: NavbarLink[] = [
   { label: 'Обзор', href: '/', icon: 'squares' },
-  { label: 'Транзакции', href: '/transactions', disabled: true, icon: 'transactions' },
+  { label: 'Транзакции', href: '/transactions', icon: 'transactions' },
   { label: 'Аналитика', href: '/analytics', disabled: true, icon: 'analytics' },
   { label: 'Отчеты', href: '/reports', disabled: true, icon: 'reports' },
 ]

@@ -1,26 +1,30 @@
 import { SharedApi, SharedUi, type SharedTypes } from '@shared'
-import { UserApiService, UserTypes } from '@units/user'
+import type { LoginRequest } from '@units/user/type'
+import * as AuthService from '@widgets/auth/service'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
-type Props = SharedTypes.Ui.PropsWithClassName
+type Props = SharedTypes.Ui.PropsWithClassName<{
+  onSignUpClick: () => void
+}>
 
 export const AuthForm = (props: Props) => {
-  const { className, ...restProps } = props
-  const [data, setData] = useState<UserTypes.LoginRequest>({ email: '', password: '' })
-
-  const { data: userData, error, isPending, mutate: login } = UserApiService.mutations.useUserLoginMutation()
+  const { className, onSignUpClick, ...restProps } = props
+  const [formData, setFormData] = useState<LoginRequest>({ email: '', password: '' })
   const navigate = useNavigate()
+  const { data: userData, error, isPending, mutate: login } = AuthService.Mutation.useAuthLoginMutation()
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    login(data)
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    login(formData)
   }
 
   useEffect(() => {
-    if (userData?.data.data) {
-      SharedApi.Clients.AnyStorageClient.saveAuthTokens(userData.data.data)
+    const tokens = userData?.data.data
+
+    if (tokens) {
+      SharedApi.Clients.AnyStorageClient.saveAuthTokens(tokens)
       navigate('/')
     }
   }, [userData, navigate])
@@ -38,16 +42,16 @@ export const AuthForm = (props: Props) => {
             type="email"
             placeholder="Email"
             label="Email"
-            value={data.email}
-            onChange={(e) => setData({ ...data, email: e.target.value })}
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           />
 
           <SharedUi.Input
             type="password"
             placeholder="Password"
             label="Password"
-            value={data.password}
-            onChange={(e) => setData({ ...data, password: e.target.value })}
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
           {error && <span className="text-primary text-xs">{error.message}</span>}
         </div>
@@ -59,6 +63,15 @@ export const AuthForm = (props: Props) => {
           disabled={isPending}
         >
           {isPending ? 'Входим...' : 'Войти'}
+        </SharedUi.Button>
+
+        <SharedUi.Button
+          type="button"
+          variant="color:secondary size:md"
+          className="w-full rounded-2xl"
+          onClick={onSignUpClick}
+        >
+          Sign up
         </SharedUi.Button>
       </form>
     </div>

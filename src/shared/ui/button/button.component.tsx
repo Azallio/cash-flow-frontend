@@ -36,7 +36,7 @@ export const Button = (props: Props) => {
         'cursor-pointer disabled:cursor-not-allowed disabled:opacity-70',
         ColorClassNames[color],
         SizeClassNames[size],
-        color !== 'none' && 'rounded-2.5xl text-center font-semibold transition-colors',
+        color !== 'none' && 'rounded-xl text-center font-semibold transition-colors',
         className,
       )}
       {...restProps}

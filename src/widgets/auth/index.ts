@@ -1,6 +1,6 @@
-// widget context auth-modal
-export * as AuthModalUi from './ui';
-export * as AuthModalService from './service';
-export * as AuthModalApi from './api';
-export * as AuthModalLib from './lib';
-export type * as AuthModalTypes from './types';
+export * as AuthApi from './api'
+export { AuthWidget } from './auth.widget'
+export * as AuthLib from './lib'
+export * as AuthService from './service'
+export type * as AuthTypes from './type'
+export * as AuthUi from './ui'

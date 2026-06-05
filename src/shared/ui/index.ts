@@ -1,10 +1,12 @@
 export { Button } from './button'
+export { ContentBlock } from './content-block'
 export { Icon } from './icon'
 export { Image, type ImageSourceName } from './image'
 export { Input } from './input'
 export { Link } from './link'
+export { Modal } from './modal'
+export { Navbar } from './navbar'
 export { Paper } from './paper'
+export { Select } from './select'
+export { SparkLine } from './sparkline'
 export { ThemeToggle } from './theme-toggle'
-export { Navbar } from './navbar';
-export { ContentBlock } from './content-block';
-export { Sparkline } from './sparkline';

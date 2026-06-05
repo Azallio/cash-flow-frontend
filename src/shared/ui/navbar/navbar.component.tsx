@@ -18,13 +18,13 @@ export const Navbar = (props: Props) => {
           to={link.href}
           className={({ isActive }) =>
             clsx(
-              'text-center text-lg font-medium flex items-center gap-2  p-3',
-              isActive ? 'text-text bg-primary rounded-2xl font-semibold' : 'text-secondary',
+              'flex items-center gap-2 p-3 text-center text-lg font-semibold',
+              isActive && 'text-text bg-primary rounded-2xl',
               link.disabled && 'pointer-events-none opacity-50',
             )
           }
         >
-          <SharedUi.Icon name={link.icon} className="size-5 text-text" />
+          <SharedUi.Icon name={link.icon} className="text-text size-5" />
           {link.label}
         </NavLink>
       ))}

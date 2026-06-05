@@ -1,4 +1,5 @@
 import { SharedUi } from '@shared'
+import { TransactionTypeEnum } from '@shared/lib/enums'
 import { UserApiService } from '@units/user'
 import { Layout } from '@widgets/layout/layout.component'
 import clsx from 'clsx'
@@ -6,22 +7,10 @@ import clsx from 'clsx'
 const formatMoney = (value: number) => `${value.toLocaleString('ru-RU')} ₽`
 
 export default function IndexRoute() {
-  const today = new Date()
+  const { data: analyticsData } = UserApiService.queries.useGeneralAnalytics({ period: 'month' })
 
-  const startDate = new Date(2020, today.getMonth(), 1).toISOString()
-  const endDate = new Date(today.getFullYear(), today.getMonth() + 10, 0, 23, 59, 59, 999).toISOString()
-
-  const { data: analyticsData } = UserApiService.queries.useGeneralAnalytics({ startDate, endDate })
-  const { data: transactionsData } = UserApiService.queries.useTransactions({
-    take: 50,
-    skip: 0,
-  })
-
-  console.log('analyticsData', analyticsData)
-  console.log('transactionsData', transactionsData)
-
-  const analytics = analyticsData?.data.data
-  const transactions = transactionsData?.data.data.items || []
+  const analytics = analyticsData
+  const transactions = analyticsData?.transactions || []
 
   const mapTransactionToPoint = (transaction: (typeof transactions)[number]) => ({
     value: transaction.amount,
@@ -30,23 +19,27 @@ export default function IndexRoute() {
 
   const analyticsCardData = [
     {
-      title: 'Доход',
+      title: 'Доходы',
       value: analytics?.totalIncome,
-      change: 0,
-      chart: transactions.filter((t) => t.transactionType === 'income').map(mapTransactionToPoint),
+      change: analytics?.totalIncomePercent || 0,
+      chart: transactions
+        .filter((t) => t.transactionType === TransactionTypeEnum.INCOME)
+        .map(mapTransactionToPoint),
     },
     {
-      title: 'Расход',
+      title: 'Расходы',
       value: analytics?.totalExpense,
-      change: -15,
-      chart: transactions.filter((t) => t.transactionType === 'expense').map(mapTransactionToPoint),
+      change: analytics?.totalExpensePercent || 0,
+      chart: transactions
+        .filter((t) => t.transactionType === TransactionTypeEnum.EXPENSE)
+        .map(mapTransactionToPoint),
     },
     {
       title: 'Баланс',
       value: analytics?.netBalance,
-      change: -1,
+      change: analytics?.netBalancePercent || 0,
       chart: transactions.map((t) => ({
-        value: t.transactionType === 'income' ? t.amount : -t.amount,
+        value: t.transactionType === TransactionTypeEnum.INCOME ? t.amount : -t.amount,
         date: new Date(t.createdAt).toLocaleDateString('ru-RU'),
       })),
     },
@@ -77,7 +70,7 @@ export default function IndexRoute() {
 
                 <p className={'text-2xl'}>{item.value !== undefined ? formatMoney(item.value) : '-'}</p>
 
-                <SharedUi.Sparkline
+                <SharedUi.SparkLine
                   data={item.chart}
                   color={index === 0 ? '#22c55e' : index === 1 ? '#ef4444' : '#41b3ab'}
                 />
