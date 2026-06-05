@@ -1,4 +1,5 @@
 export { getGeneralAnalytics, type Params as GeneralAnalyticsParams } from './get-general-user-analytics.api'
+export { getTransactions, type Params as TransactionsParams } from './get-transactions.api'
 // export { getTransactions } from './get-transactions.api'
 // export { YearlyAnalyticsResponse } from './get-yearly-user-analytics.api'
 // export { login } from './post-user-login.api'
