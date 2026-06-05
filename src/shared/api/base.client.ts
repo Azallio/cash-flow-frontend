@@ -30,7 +30,7 @@ const clearUserAuth = () => {
   LocalStorageClient.clear()
   SessionStorageClient.clear()
   if (typeof window !== 'undefined') {
-    window.location.replace('/auth')
+    window.location.replace('auth')
   }
 }
 
