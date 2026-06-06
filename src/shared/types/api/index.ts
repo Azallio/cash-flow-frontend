@@ -1,1 +1,1 @@
-export type { transactionType } from './transaction.type'
+export type { transactionType } from './transaction-type'

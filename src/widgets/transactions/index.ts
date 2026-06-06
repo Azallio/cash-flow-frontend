@@ -1,4 +1,6 @@
 export * as TransactionsApi from './api'
+export * as TransactionModels from './model'
 export * as TransactionsService from './service'
 export { TransactionsWidget } from './transactions.widget'
 export * as TransactionsUi from './ui'
+export * as TransactionsUtils from './utils'

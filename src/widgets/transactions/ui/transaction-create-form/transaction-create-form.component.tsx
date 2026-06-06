@@ -1,14 +1,9 @@
-import { Consts } from '@shared/lib'
-import { TransactionTypeEnum } from '@shared/lib/enums'
+import { SharedLib, SharedUi } from '@shared'
 import type { CategoryResponse } from '@shared/types/http'
-import { Button } from '@shared/ui/button'
-import { ContentBlock } from '@shared/ui/content-block'
-import { Input } from '@shared/ui/input'
-import { Modal } from '@shared/ui/modal'
-import { Select } from '@shared/ui/select'
 import type { CreateCategoryPayload, CreateTransactionPayload } from '@widgets/transactions/api/method'
-import clsx from 'clsx'
-import { useMemo, useState, type FormEvent } from 'react'
+import { useCreateCategoryForm, useCreateTransactionForm } from '@widgets/transactions/model'
+import { useMemo, useState } from 'react'
+import * as TransactionCreateFormUi from './ui'
 
 type Props = {
   categories: CategoryResponse[]
@@ -18,18 +13,6 @@ type Props = {
   isCreateTransactionPending: boolean
 }
 
-type TransactionFormValues = {
-  amount: string
-  description: string
-  createdAt: string
-}
-
-type CategoryFormValues = {
-  title: string
-  description: string
-}
-
-const toIsoStartOfDay = (date: string) => new Date(`${date}T00:00:00.000Z`).toISOString()
 const AddNewCategoryOptionValue = '__add-new-category__'
 
 export const TransactionCreateForm = (props: Props) => {
@@ -41,206 +24,84 @@ export const TransactionCreateForm = (props: Props) => {
     isCreateTransactionPending,
   } = props
 
-  const [transactionType, setTransactionType] = useState<
-    TransactionTypeEnum.INCOME | TransactionTypeEnum.EXPENSE
-  >(TransactionTypeEnum.INCOME)
-  const [categoryId, setCategoryId] = useState('')
-  const [transactionFormValues, setTransactionFormValues] = useState<TransactionFormValues>({
-    amount: '',
-    description: '',
-    createdAt: new Date().toISOString().slice(0, 10),
-  })
-  const [categoryFormValues, setCategoryFormValues] = useState<CategoryFormValues>({
-    title: '',
-    description: '',
-  })
+  const [transactionType, setTransactionType] = useState<SharedLib.Enums.TransactionTypeEnum>(
+    SharedLib.Enums.TransactionTypeEnum.INCOME,
+  )
+
   const [isCategoryModalOpened, setIsCategoryModalOpened] = useState(false)
-  const [createCategoryError, setCreateCategoryError] = useState('')
 
   const categoriesByTransactionType = useMemo(
     () => categories.filter((item) => item.transactionType === transactionType),
     [categories, transactionType],
   )
 
-  const handleCreateCategory = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const categoryForm = useCreateCategoryForm({
+    transactionType,
+    onCreateCategory,
+    onSuccess: (category) => {
+      transactionForm.form.setValue('categoryId', category.id)
 
-    const title = categoryFormValues.title.trim()
-    const description = categoryFormValues.description.trim()
-
-    if (!title || !description) {
-      setCreateCategoryError('Заполните название и описание категории')
-      return
-    }
-
-    setCreateCategoryError('')
-
-    try {
-      const createdCategory = await onCreateCategory({
-        title,
-        description,
-        transactionType,
-      })
-
-      setCategoryId(String(createdCategory.id))
       setIsCategoryModalOpened(false)
-    } catch {
-      setCreateCategoryError('Не удалось создать категорию. Попробуйте еще раз')
-      return
-    }
+    },
+  })
 
-    setCategoryFormValues({
-      title: '',
-      description: '',
-    })
-  }
-
-  const handleCreateTransaction = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-
-    const amount = Number(transactionFormValues.amount)
-    const normalizedCategoryId = Number(categoryId)
-
-    if (!amount || amount <= 0 || !normalizedCategoryId || !transactionFormValues.createdAt) {
-      return
-    }
-
-    await onCreateTransaction({
-      amount,
-      categoryId: normalizedCategoryId,
-      createdAt: toIsoStartOfDay(transactionFormValues.createdAt),
-      description: transactionFormValues.description.trim() || 'Без описания',
-      transactionType,
-    })
-
-    setTransactionFormValues((prevState) => ({
-      ...prevState,
-      amount: '',
-      description: '',
-    }))
-  }
+  const transactionForm = useCreateTransactionForm({
+    transactionType,
+    onCreateTransaction,
+  })
 
   return (
-    <ContentBlock className="border-border w-full border xl:w-96">
+    <SharedUi.ContentBlock className="border-border w-full flex-1 border xl:w-96 max-h-132">
       <h2 className="mb-4 text-xl font-semibold">Новая транзакция</h2>
 
-      <form className="flex flex-col gap-3" onSubmit={handleCreateTransaction}>
+      <form className="flex flex-col gap-3" onSubmit={transactionForm.submit}>
         <div className="border-border grid grid-cols-2 gap-2 rounded-xl border p-1">
-          {Consts.TransactionTypeToggleOptions.map((item) => (
-            <button
+          {SharedLib.Consts.TransactionTypeToggleOptions.map((item) => (
+            <TransactionCreateFormUi.TransactionTypeToggleButton
               key={item.value}
-              type="button"
-              onClick={() => {
-                setTransactionType(item.value)
-                setCategoryId('')
-              }}
-              className={clsx(
-                'h-10 rounded-lg text-sm font-semibold transition-colors',
-                transactionType === item.value
-                  ? item.value === TransactionTypeEnum.INCOME
-                    ? 'bg-success/20 text-success'
-                    : 'bg-primary/20 text-primary'
-                  : 'text-text-muted hover:bg-bg',
-              )}
-            >
-              {item.label}
-            </button>
+              item={item}
+              transactionType={transactionType}
+              setTransactionType={setTransactionType}
+              transactionForm={transactionForm}
+            />
           ))}
         </div>
 
-        {Consts.TransactionFormInputFields.map((field) => (
-          <Input
-            key={field.key}
-            label={field.label}
-            type={field.type}
-            placeholder={field.placeholder}
-            value={transactionFormValues[field.key]}
-            onChange={(event) =>
-              setTransactionFormValues((prevState) => ({
-                ...prevState,
-                [field.key]: event.target.value,
-              }))
-            }
-          />
-        ))}
-
-        <label className="text-sm font-medium">Категория</label>
-        <Select
-          value={categoryId}
-          onChange={(value: string | number | null, _option) => {
-            if (!value) {
-              setCategoryId('')
-              return
-            }
-
-            const normalizedValue = String(value)
-
-            if (normalizedValue === AddNewCategoryOptionValue) {
-              setIsCategoryModalOpened(true)
-              return
-            }
-
-            setCategoryId(normalizedValue)
-          }}
-          placeholder="Выберите категорию"
-          data={[
-            ...categoriesByTransactionType.map((item) => ({
-              value: String(item.id),
-              label: item.title,
-            })),
-            {
-              value: AddNewCategoryOptionValue,
-              label: 'Добавить новую',
-            },
-          ]}
-          required
+        <SharedUi.Input
+          label="Сумма"
+          type="number"
+          placeholder="Введите сумму"
+          {...transactionForm.form.register('amount', {
+            valueAsNumber: true,
+          })}
         />
 
-        <Button type="submit" variant="color:primary size:md" disabled={isCreateTransactionPending}>
+        <SharedUi.Input
+          label="Описание"
+          placeholder="Введите описание"
+          {...transactionForm.form.register('description')}
+        />
+
+        <SharedUi.Input label="Дата" type="date" {...transactionForm.form.register('createdAt')} />
+
+        <label className="text-sm font-medium">Категория</label>
+        <TransactionCreateFormUi.TransactionCategorySelect
+          transactionForm={transactionForm}
+          categoriesByTransactionType={categoriesByTransactionType}
+          setIsCategoryModalOpened={setIsCategoryModalOpened}
+          AddNewCategoryOptionValue={AddNewCategoryOptionValue}
+        />
+
+        <SharedUi.Button type="submit" variant="color:primary size:md" disabled={isCreateTransactionPending}>
           {isCreateTransactionPending ? 'Сохранение...' : 'Добавить транзакцию'}
-        </Button>
+        </SharedUi.Button>
       </form>
-
-      <Modal
-        opened={isCategoryModalOpened}
-        onClose={() => {
-          setIsCategoryModalOpened(false)
-          setCreateCategoryError('')
-        }}
-        title="Новая категория"
-      >
-        <form className="flex flex-col gap-3" onSubmit={handleCreateCategory}>
-          <Input
-            label="Название"
-            placeholder={Consts.CategoryFormInputFields[0].placeholder}
-            value={categoryFormValues.title}
-            onChange={(event) =>
-              setCategoryFormValues((prevState) => ({
-                ...prevState,
-                title: event.target.value,
-              }))
-            }
-          />
-
-          <Input
-            label="Описание"
-            placeholder={Consts.CategoryFormInputFields[1].placeholder}
-            value={categoryFormValues.description}
-            onChange={(event) =>
-              setCategoryFormValues((prevState) => ({
-                ...prevState,
-                description: event.target.value,
-              }))
-            }
-          />
-
-          {createCategoryError && <span className="text-primary text-xs">{createCategoryError}</span>}
-
-          <Button type="submit" variant="color:primary size:md" disabled={isCreateCategoryPending}>
-            {isCreateCategoryPending ? 'Создание...' : 'Создать категорию'}
-          </Button>
-        </form>
-      </Modal>
-    </ContentBlock>
+      <TransactionCreateFormUi.CategoryCreateModal
+        isCategoryModalOpened={isCategoryModalOpened}
+        setIsCategoryModalOpened={setIsCategoryModalOpened}
+        categoryForm={categoryForm}
+        isCreateCategoryPending={isCreateCategoryPending}
+      />
+    </SharedUi.ContentBlock>
   )
 }

@@ -5,7 +5,7 @@ import type { TransactionsResponse } from '@shared/types/http'
 export type CreateTransactionPayload = {
   categoryId: number
   amount: number
-  transactionType: TransactionTypeEnum.INCOME | TransactionTypeEnum.EXPENSE
+  transactionType: TransactionTypeEnum
   description: string
   createdAt: string
 }
