@@ -1,5 +1,5 @@
 import { TransactionsService } from '@widgets/transactions'
-import { calculateTransactionSummary, filterTransactions } from '@widgets/transactions/utils'
+import { calculateTransactionSummary, filterTransactions } from '@widgets/transactions/lib/utils'
 import { useMemo } from 'react'
 
 const toIso = (date: string, isEnd = false) =>
@@ -34,7 +34,10 @@ export const useTransactionsWidget = () => {
     [transactionsQuery.data],
   )
 
-  const categories = useMemo(() => categoriesQuery.data?.items ?? [], [categoriesQuery.data])
+  const categories = useMemo(
+    () => categoriesQuery.data?.pages.flatMap((p) => p.items) ?? [],
+    [categoriesQuery.data],
+  )
 
   const resolved = TransactionsService.Query.useResolvedCategoryMapQuery({
     transactions,

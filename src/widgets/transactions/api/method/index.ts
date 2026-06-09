@@ -1,6 +1,7 @@
+export { deleteCategory, type DeleteCategoryParams } from './delete-category.api'
+export { deleteTransaction, type DeleteTransactionParams } from './delete-transaction.api'
 export { getCategories, type GetCategoriesParams } from './get-categories.api'
 export { getCategoryById, type GetCategoryByIdParams } from './get-category-by-id.api'
 export { getTransactions, type GetTransactionsParams } from './get-transactions.api'
-export { deleteTransaction, type DeleteTransactionParams } from './delete-transaction.api'
 export { postCategory, type CreateCategoryPayload } from './post-category.api'
 export { postTransaction, type CreateTransactionPayload } from './post-transaction.api'

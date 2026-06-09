@@ -1,4 +1,3 @@
 // ui segment for layout
-export { Footer } from './footer'
-export { Header } from './header'
+export { Sidebar } from './sidebar'
 export { Main } from './main'

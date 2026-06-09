@@ -8,11 +8,9 @@ export const TransactionsWidget = () => {
   const balance = summary.income - summary.expense
 
   return (
-    <div className="flex w-full flex-col gap-6 p-4">
-      <TransactionsUi.TransactionsSummary {...summary} balance={balance} />
-
-      <div className="flex flex-col-reverse gap-4 xl:flex-row">
-        <div className="flex-2.5 flex max-w-2/3! min-w-0 flex-col gap-4">
+    <div className="flex size-full flex-col gap-6 p-4">
+      <div className="flex max-h-screen flex-2 flex-col-reverse gap-4 lg:flex-row">
+        <div className="flex-2.5 flex h-full max-w-2/3! min-w-0 flex-col gap-4">
           <TransactionsUi.TransactionsFilters
             typeFilter={filters.typeFilter}
             filterValues={filters}
@@ -35,13 +33,16 @@ export const TransactionsWidget = () => {
           />
         </div>
 
-        <TransactionsUi.TransactionCreateForm
-          categories={categoriesQuery.data?.items ?? []}
-          onCreateCategory={(p) => mutations.createCategory.mutateAsync(p)}
-          onCreateTransaction={(p) => mutations.createTransaction.mutateAsync(p)}
-          isCreateCategoryPending={mutations.createCategory.isPending}
-          isCreateTransactionPending={mutations.createTransaction.isPending}
-        />
+        <div className="flex-1 flex flex-col gap-4 h-max">
+					<TransactionsUi.TransactionsSummary {...summary} balance={balance} />
+					<TransactionsUi.TransactionCreateForm
+						categories={categoriesQuery.data?.pages.flatMap((page) => page.items) || []}
+						onCreateCategory={(p) => mutations.createCategory.mutateAsync(p)}
+						onCreateTransaction={(p) => mutations.createTransaction.mutateAsync(p)}
+						isCreateCategoryPending={mutations.createCategory.isPending}
+						isCreateTransactionPending={mutations.createTransaction.isPending}
+					/>
+				</div>
       </div>
     </div>
   )

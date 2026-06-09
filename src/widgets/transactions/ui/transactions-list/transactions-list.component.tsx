@@ -1,10 +1,11 @@
+import { SharedUi } from '@shared'
 import { TransactionTypeEnum } from '@shared/lib/enums'
 import useInfinityScroll from '@shared/service/hook/use-infinity-scroll.hook'
 import type { TransactionsResponse } from '@shared/types/http'
 import { Button } from '@shared/ui/button'
 import { ContentBlock } from '@shared/ui/content-block'
-import { Icon } from '@shared/ui/icon'
 import { Modal } from '@shared/ui/modal'
+import { pluralize } from '@widgets/transactions/lib/utils'
 import clsx from 'clsx'
 import { useCallback, useState } from 'react'
 
@@ -21,11 +22,15 @@ type Props = {
 
 const formatMoney = (value: number) => `${value.toLocaleString('ru-RU')} ₽`
 
-const formatTime = (value: string) =>
-  new Date(value).toLocaleTimeString('ru-RU', {
+const formatTime = (value: string): string => {
+  return new Date(value).toLocaleString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
   })
+}
 
 export const TransactionsList = (props: Props) => {
   const {
@@ -58,13 +63,15 @@ export const TransactionsList = (props: Props) => {
   const lastElementRef = useInfinityScroll(handleLoadMore)
 
   return (
-    <ContentBlock className="border-border h-full max-h-156 overflow-scroll border">
+    <ContentBlock className="border-border h-full overflow-scroll border">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Последние транзакции</h2>
-        <span className="text-text-muted text-sm">{transactions.length} записей</span>
+        <h2 className="text-xl font-semibold">Последние транзакции </h2>
+        <span className="text-text-muted text-sm">
+          {transactions.length} {pluralize(transactions.length, 'запись ', 'записи ', 'записей  ')}
+        </span>
       </div>
 
-      <div className="space-y-2">
+      <div className="flex flex-col gap-2">
         {isLoading && <div className="text-text-muted py-6 text-center">Загрузка...</div>}
 
         {!isLoading && !transactions.length && (
@@ -99,14 +106,13 @@ export const TransactionsList = (props: Props) => {
                   {formatMoney(item.amount)}
                 </span>
                 <span className="text-text-muted">{formatTime(item.createdAt)}</span>
-                <button
-                  type="button"
+                <SharedUi.Button
                   aria-label="Удалить транзакцию"
-                  className="text-text-muted hover:text-primary inline-flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
+                  variant="color:secondary size:sm"
                   onClick={() => setDeleteTransactionId(item.id)}
                 >
-                  <Icon name="trash" className="h-4 w-4" />
-                </button>
+                  <SharedUi.Icon name="trash" className="h-4 w-4" />
+                </SharedUi.Button>
               </div>
             </div>
           )

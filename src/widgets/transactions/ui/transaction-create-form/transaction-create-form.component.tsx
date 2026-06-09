@@ -4,6 +4,7 @@ import type { CreateCategoryPayload, CreateTransactionPayload } from '@widgets/t
 import { useCreateCategoryForm, useCreateTransactionForm } from '@widgets/transactions/model'
 import { useMemo, useState } from 'react'
 import * as TransactionCreateFormUi from './ui'
+import { CategorySettingsModal } from './ui/category-settings-modal.component'
 
 type Props = {
   categories: CategoryResponse[]
@@ -29,6 +30,7 @@ export const TransactionCreateForm = (props: Props) => {
   )
 
   const [isCategoryModalOpened, setIsCategoryModalOpened] = useState(false)
+  const [isCategorySettingsModalOpened, setIsCategorySettingsModalOpened] = useState(false)
 
   const categoriesByTransactionType = useMemo(
     () => categories.filter((item) => item.transactionType === transactionType),
@@ -51,7 +53,7 @@ export const TransactionCreateForm = (props: Props) => {
   })
 
   return (
-    <SharedUi.ContentBlock className="border-border w-full flex-1 border xl:w-96 max-h-132">
+    <SharedUi.ContentBlock className="border-border h-max w-full flex-1 border">
       <h2 className="mb-4 text-xl font-semibold">Новая транзакция</h2>
 
       <form className="flex flex-col gap-3" onSubmit={transactionForm.submit}>
@@ -84,13 +86,23 @@ export const TransactionCreateForm = (props: Props) => {
 
         <SharedUi.Input label="Дата" type="date" {...transactionForm.form.register('createdAt')} />
 
-        <label className="text-sm font-medium">Категория</label>
-        <TransactionCreateFormUi.TransactionCategorySelect
-          transactionForm={transactionForm}
-          categoriesByTransactionType={categoriesByTransactionType}
-          setIsCategoryModalOpened={setIsCategoryModalOpened}
-          AddNewCategoryOptionValue={AddNewCategoryOptionValue}
-        />
+        <div>
+          <label className="text-sm font-semibold">Категория</label>
+          <TransactionCreateFormUi.TransactionCategorySelect
+            transactionForm={transactionForm}
+            categoriesByTransactionType={categoriesByTransactionType}
+            setIsCategoryModalOpened={setIsCategoryModalOpened}
+            AddNewCategoryOptionValue={AddNewCategoryOptionValue}
+          />
+        </div>
+
+        <SharedUi.Button
+          type="button"
+          variant="color:secondary size:md"
+          onClick={() => setIsCategorySettingsModalOpened(true)}
+        >
+          Настройки категорий
+        </SharedUi.Button>
 
         <SharedUi.Button type="submit" variant="color:primary size:md" disabled={isCreateTransactionPending}>
           {isCreateTransactionPending ? 'Сохранение...' : 'Добавить транзакцию'}
@@ -101,6 +113,11 @@ export const TransactionCreateForm = (props: Props) => {
         setIsCategoryModalOpened={setIsCategoryModalOpened}
         categoryForm={categoryForm}
         isCreateCategoryPending={isCreateCategoryPending}
+      />
+
+      <CategorySettingsModal
+        opened={isCategorySettingsModalOpened}
+        onClose={() => setIsCategorySettingsModalOpened(false)}
       />
     </SharedUi.ContentBlock>
   )

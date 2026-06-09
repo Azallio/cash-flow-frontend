@@ -18,18 +18,31 @@ type Props = {
   disabled?: boolean
   allowDeselect?: boolean
   label?: string
+  searchable?: boolean
+  clearable?: boolean
 }
 
 export const Select = (props: Props) => {
-  const { className, classNames, ...restProps } = props
+  const { className, classNames, searchable, clearable, ...restProps } = props
 
   const { mode } = useTheme()
 
   return (
     <MantineSelect
+      checkIconPosition="right"
+      clearable={clearable}
+      searchable={searchable}
       className={className}
+      comboboxProps={{
+        transitionProps: {
+          transition: 'scale-y',
+          duration: 200,
+          timingFunction: 'ease',
+        },
+      }}
       classNames={{ ...selectVariantClassNames[mode], ...classNames }}
       {...restProps}
     />
   )
 }
+

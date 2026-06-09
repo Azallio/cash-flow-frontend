@@ -7,15 +7,20 @@ type Props = SharedTypes.Ui.PropsWithClassName<{
   placeholder?: string
   type?: string
   value?: string
+  defaultValue?: string
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }>
 
 export const Input = (props: Props) => {
-  const { className, label, placeholder, type, value, onChange, ...restProps } = props
+  const { className, label, placeholder, type, value, defaultValue, onChange, ...restProps } = props
 
   return (
     <TextInput
-      classNames={inputVariantClassNames['dark']}
+      classNames={
+        (inputVariantClassNames['dark'],
+        { input: inputVariantClassNames['dark'].input + (type === 'date' && ' uppercase') })
+      }
+      defaultValue={defaultValue}
       label={label}
       placeholder={placeholder}
       type={type}

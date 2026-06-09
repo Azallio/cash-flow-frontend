@@ -13,6 +13,7 @@ type Color = keyof typeof ColorClassNames
 const SizeClassNames = {
   sm: 'py-3 px-4',
   md: 'py-2 px-4 md:py-3 md:px-6',
+	lg: 'py-3 px-6',
   none: '',
 } as const
 

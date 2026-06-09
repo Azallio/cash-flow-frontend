@@ -47,12 +47,12 @@ export default function IndexRoute() {
 
   return (
     <Layout>
-      <div className="flex w-full flex-col gap-6 pt-4">
+      <div className="flex w-full flex-col gap-6 p-4">
         <div>
           <h1 className="text-3xl">Обзор</h1>
           <span className="text-md text-gray-400">Аналитика ваших финансов</span>
         </div>
-        <div className="flex w-full justify-between gap-4 pr-4">
+        <div className="flex w-full justify-between gap-4">
           {analyticsCardData.map((item, index) => (
             <SharedUi.ContentBlock key={item.title} className="w-1/3">
               <div className="flex flex-col gap-2">

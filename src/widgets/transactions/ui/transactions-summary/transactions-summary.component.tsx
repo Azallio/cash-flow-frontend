@@ -20,7 +20,7 @@ export const TransactionsSummary = (props: Props) => {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div className="flex flex-col gap-4">
       {Consts.TransactionSummaryCards.map((item) => (
         <ContentBlock key={item.key} className="border-border border">
           <p className="text-text-muted text-sm">{item.title}</p>
