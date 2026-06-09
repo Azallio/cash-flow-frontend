@@ -33,7 +33,7 @@ export const TransactionsWidget = () => {
           />
         </div>
 
-        <div className="flex-1 flex flex-col gap-4 h-max">
+        <div className="flex-1 flex flex-col gap-4 h-full">
 					<TransactionsUi.TransactionsSummary {...summary} balance={balance} />
 					<TransactionsUi.TransactionCreateForm
 						categories={categoriesQuery.data?.pages.flatMap((page) => page.items) || []}

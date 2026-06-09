@@ -22,13 +22,25 @@ type Props = {
 
 const formatMoney = (value: number) => `${value.toLocaleString('ru-RU')} ₽`
 
-const formatTime = (value: string): string => {
-  return new Date(value).toLocaleString('ru-RU', {
-    day: '2-digit',
-    month: '2-digit',
-    year: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
+const formatDate = (value: string): string => {
+  const date = new Date(value)
+  const now = new Date()
+
+  const isSameDay = (a: Date, b: Date) =>
+    a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear()
+
+  if (isSameDay(date, now)) return 'Сегодня'
+
+  const yesterday = new Date(now)
+  yesterday.setDate(now.getDate() - 1)
+  if (isSameDay(date, yesterday)) return 'Вчера'
+
+  const isSameYear = date.getFullYear() === now.getFullYear()
+
+  return date.toLocaleString('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    ...(isSameYear ? {} : { year: 'numeric' }),
   })
 }
 
@@ -84,7 +96,7 @@ export const TransactionsList = (props: Props) => {
             <div
               key={item.id}
               ref={isLast ? lastElementRef : undefined}
-              className="border-border flex flex-col gap-2 rounded-xl border px-4 py-3 md:flex-row md:items-center md:justify-between"
+              className="border-border flex flex-col gap-2 rounded-xl border px-4 py-3 md:flex-row md:items-center md:justify-between group"
             >
               <div>
                 <p className="font-medium">{item.description}</p>
@@ -95,24 +107,28 @@ export const TransactionsList = (props: Props) => {
                 </p>
               </div>
 
-              <div className="flex items-center gap-4 text-sm">
-                <span
-                  className={clsx(
-                    'font-semibold',
-                    item.transactionType === TransactionTypeEnum.INCOME ? 'text-success' : 'text-primary',
-                  )}
-                >
-                  {item.transactionType === TransactionTypeEnum.INCOME ? '+' : '-'}
-                  {formatMoney(item.amount)}
-                </span>
-                <span className="text-text-muted">{formatTime(item.createdAt)}</span>
+              <div className=" flex items-center gap-4 text-sm w-40 justify-between">
                 <SharedUi.Button
                   aria-label="Удалить транзакцию"
+									className="invisible group-hover:visible transition-all duration-200"
                   variant="color:secondary size:sm"
                   onClick={() => setDeleteTransactionId(item.id)}
                 >
                   <SharedUi.Icon name="trash" className="h-4 w-4" />
                 </SharedUi.Button>
+
+                <div className="flex flex-col items-end">
+                  <span
+                    className={clsx(
+                      'font-semibold',
+                      item.transactionType === TransactionTypeEnum.INCOME ? 'text-success' : 'text-primary',
+                    )}
+                  >
+                    {item.transactionType === TransactionTypeEnum.INCOME ? '+' : '-'}
+                    {formatMoney(item.amount)}
+                  </span>
+                  <span className="text-text-muted">{formatDate(item.createdAt)}</span>
+                </div>
               </div>
             </div>
           )

@@ -53,7 +53,7 @@ export const TransactionCreateForm = (props: Props) => {
   })
 
   return (
-    <SharedUi.ContentBlock className="border-border h-max w-full flex-1 border">
+    <SharedUi.ContentBlock className="border-border h-full w-full flex-1 border">
       <h2 className="mb-4 text-xl font-semibold">Новая транзакция</h2>
 
       <form className="flex flex-col gap-3" onSubmit={transactionForm.submit}>
