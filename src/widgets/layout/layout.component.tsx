@@ -12,7 +12,7 @@ export const Layout = (props: Props) => {
   return (
     <div className={clsx(className, 'flex h-full')} {...restProps}>
       <Sidebar />
-      <Main className="h-full w-full">{children}</Main>
+      <Main className="h-full w-full p-4">{children}</Main>
     </div>
   )
 }

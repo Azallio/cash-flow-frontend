@@ -28,6 +28,7 @@ export function Layout(props: React.PropsWithChildren) {
         <title>Cash Flow App</title>
         <Meta />
         <Links />
+        <script src="src/shared/lib/utils/init-theme.util.ts" defer />
       </head>
 
       <body>

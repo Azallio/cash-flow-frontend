@@ -5,7 +5,7 @@ export const inputVariantClassNames = {
     placeholder: 'text-text ',
     input:
       'border-primary! rounded-xl! border-2! w-full! bg-surface! p-3! text-sm! outline-none! shadow-none! h-12! font-sf-pro! font-semibold! text-text!',
-    required: 'text-gray-350!',
+    required: 'text-text!',
     error: 'text-red-500! text-xs! px-3! mt-0.5! font-sf-pro!',
   },
   light: {
@@ -13,7 +13,7 @@ export const inputVariantClassNames = {
     label: 'px-3! text-xs! font-sf-pro font-semibold',
     placeholder: 'text-gray-350! font-sf-pro!',
     input:
-      'border-border! rounded-xl! border! w-full! bg-white! p-3! text-sm! outline-none! shadow-none! h-12! font-sf-pro! font-semibold! text-white!',
+      'border-border! rounded-xl! border! w-full! bg-white! p-3! text-sm! outline-none! shadow-none! h-12! font-sf-pro! font-semibold! text-text!',
     required: 'text-gray-350!',
     error: 'text-red-500! text-xs! px-3! mt-0.5! font-sf-pro!',
   },

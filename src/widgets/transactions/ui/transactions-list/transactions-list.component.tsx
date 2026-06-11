@@ -8,6 +8,7 @@ import { Modal } from '@shared/ui/modal'
 import { pluralize } from '@widgets/transactions/lib/utils'
 import clsx from 'clsx'
 import { useCallback, useState } from 'react'
+import { TransactionLoader } from './transaction-loader.component'
 
 type Props = {
   transactions: TransactionsResponse[]
@@ -84,11 +85,9 @@ export const TransactionsList = (props: Props) => {
       </div>
 
       <div className="flex flex-col gap-2">
-        {isLoading && <div className="text-text-muted py-6 text-center">Загрузка...</div>}
+        {isLoading && [1, 2, 3].map((index) => <TransactionLoader key={index} />)}
 
-        {!isLoading && !transactions.length && (
-          <div className="text-text-muted py-6 text-center">Транзакции не найдены</div>
-        )}
+        {!isLoading && !transactions.length && <SharedUi.NotFoundMessage title="Транзакции не найдены" />}
 
         {transactions.map((item, index) => {
           const isLast = index === transactions.length - 1
@@ -96,8 +95,9 @@ export const TransactionsList = (props: Props) => {
             <div
               key={item.id}
               ref={isLast ? lastElementRef : undefined}
-              className="border-border flex flex-col gap-2 rounded-xl border px-4 py-3 md:flex-row md:items-center md:justify-between group"
+              className="border-border group flex flex-col gap-2 rounded-xl border px-4 py-3 md:flex-row md:items-center md:justify-between"
             >
+              {' '}
               <div>
                 <p className="font-medium">{item.description}</p>
                 <p className="text-text-muted text-sm">
@@ -106,11 +106,10 @@ export const TransactionsList = (props: Props) => {
                     : 'Без категории'}
                 </p>
               </div>
-
-              <div className=" flex items-center gap-4 text-sm w-40 justify-between">
+              <div className="flex w-40 items-center justify-between gap-4 text-sm">
                 <SharedUi.Button
                   aria-label="Удалить транзакцию"
-									className="invisible group-hover:visible transition-all duration-200"
+                  className="invisible transition-all duration-200 group-hover:visible"
                   variant="color:secondary size:sm"
                   onClick={() => setDeleteTransactionId(item.id)}
                 >

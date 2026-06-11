@@ -17,7 +17,6 @@ export const useCreateTransactionForm = ({ transactionType, onCreateTransaction 
     resolver: zodResolver(createTransactionSchema),
 
     defaultValues: {
-      amount: 0,
       description: '',
       categoryId: 0,
       createdAt: new Date().toISOString().slice(0, 10),

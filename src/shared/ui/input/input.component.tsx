@@ -8,11 +8,12 @@ type Props = SharedTypes.Ui.PropsWithClassName<{
   type?: string
   value?: string
   defaultValue?: string
+  required?: boolean
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }>
 
 export const Input = (props: Props) => {
-  const { className, label, placeholder, type, value, defaultValue, onChange, ...restProps } = props
+  const { className, label, placeholder, type, value, defaultValue, onChange, required, ...restProps } = props
 
   return (
     <TextInput
@@ -26,6 +27,7 @@ export const Input = (props: Props) => {
       type={type}
       value={value}
       onChange={onChange}
+      required={required}
       {...restProps}
     />
   )

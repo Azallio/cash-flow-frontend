@@ -4,7 +4,7 @@ import type { CategoryResponse } from '@shared/types/http'
 
 export type CreateCategoryPayload = {
   title: string
-  description: string
+  description?: string
   transactionType: TransactionTypeEnum
 }
 

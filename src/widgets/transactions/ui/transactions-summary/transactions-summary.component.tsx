@@ -22,7 +22,7 @@ export const TransactionsSummary = (props: Props) => {
   return (
     <div className="flex flex-col gap-4 md:flex-row xl:flex-row">
       {Consts.TransactionSummaryCards.map((item) => (
-        <ContentBlock key={item.key} className="border-border border w-full flex-1 text-nowrap">
+        <ContentBlock key={item.key} className="border-border border w-full flex-1 text-nowrap p-3.75!">
           <p className="text-text-muted text-sm">{item.title}</p>
           <p
             className={clsx('text-2xl font-semibold', {

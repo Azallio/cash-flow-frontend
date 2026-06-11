@@ -30,6 +30,7 @@ export function CategoryCreateModal({
         <SharedUi.Input
           label="Описание"
           placeholder={SharedLib.Consts.CategoryFormInputFields[1].placeholder}
+          required={false}
           {...categoryForm.form.register('description')}
         />
 
