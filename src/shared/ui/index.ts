@@ -14,3 +14,5 @@ export { SparkLine } from './sparkline'
 export { ThemeToggle } from './theme-toggle'
 export { OverviewCard } from './overview-card';
 export { IncomeExpenceDynamicChart } from './income-expence-dynamic-chart';
+export { MonthlyBudget } from './monthly-budget';
+export { TopExpenseCategories } from './top-expense-categories';

@@ -50,7 +50,7 @@ export const IncomeExpenceDynamicChart = (props: Props) => {
           }}
         />
       </div>
-      <SharedUi.DoubleSparkLine className="h-80! w-max" data={sortedAnalyticsForDoubleSparkLine} />
+      <SharedUi.DoubleSparkLine className="h-80! w-full" data={sortedAnalyticsForDoubleSparkLine} />
     </SharedUi.ContentBlock>
   )
 }

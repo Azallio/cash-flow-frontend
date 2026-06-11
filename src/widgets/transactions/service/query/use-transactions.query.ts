@@ -24,7 +24,10 @@ export const useTransactionsInfiniteQuery = (params: Params) => {
       }),
 
     getNextPageParam: (lastPage, pages) => {
-      if (lastPage.items.length < 10) return undefined
+      console.log(lastPage, pages)
+
+      const totalItems = lastPage.totalItems
+      if (pages.length * 10 >= totalItems) return undefined
       return pages.length * 10
     },
   })

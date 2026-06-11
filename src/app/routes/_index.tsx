@@ -10,11 +10,21 @@ export default function IndexRoute() {
   return (
     <Layout>
       <SharedUi.OverviewCard analyticsData={analyticsData} />
-      <SharedUi.IncomeExpenceDynamicChart
-        analyticsData={analyticsData}
-        sortChartPeriod={sortChartPeriod}
-        setSortChartPeriod={setSortChartPeriod}
-      />
+      <div className="flex h-max gap-4">
+        <SharedUi.IncomeExpenceDynamicChart
+          analyticsData={analyticsData}
+          sortChartPeriod={sortChartPeriod}
+          setSortChartPeriod={setSortChartPeriod}
+        />
+        <div className="flex w-1/3 flex-col gap-4">
+          <SharedUi.MonthlyBudget
+            budget={12000}
+            expensesPercent={analyticsData?.totalExpensePercent ?? 0}
+            expenses={analyticsData?.totalExpense ?? 0}
+          />
+          <SharedUi.TopExpenseCategories />
+        </div>
+      </div>
     </Layout>
   )
 }
