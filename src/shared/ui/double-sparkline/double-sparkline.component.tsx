@@ -14,6 +14,18 @@ export const DoubleSparkLine = (props: Props) => {
   const id1 = React.useId()
   const id2 = React.useId()
 
+  console.table(
+    data.map((x) => ({
+      raw: x.date,
+      parsed: new Date(x.date).toString(),
+      defaultFormatted: x.date,
+      customFormatted: new Date(x.date).toLocaleDateString('ru-RU', {
+        day: '2-digit',
+        month: 'short',
+      }),
+    })),
+  )
+
   return (
     <ResponsiveContainer width="100%" height="100%" className={className} {...restProps}>
       <AreaChart data={data}>
@@ -34,12 +46,7 @@ export const DoubleSparkLine = (props: Props) => {
           tick={{ fontSize: 12, fill: '#888' }}
           tickLine={false}
           axisLine={{ stroke: '#e5e7eb' }}
-          tickFormatter={(value) =>
-            new Date(value).toLocaleDateString('ru-RU', {
-              day: '2-digit',
-              month: 'short',
-            })
-          }
+          tickFormatter={(value) => value.slice(0, 5)}
         />
 
         <YAxis
@@ -49,7 +56,21 @@ export const DoubleSparkLine = (props: Props) => {
           tickFormatter={(v) => (v >= 1000 ? `${v / 1000}k` : v)}
         />
 
-        <Tooltip />
+        <Tooltip
+          contentStyle={{
+            backgroundColor: '#1f2937',
+            border: '1px solid #374151',
+            borderRadius: '8px',
+            color: '#fff',
+          }}
+          labelStyle={{
+            color: '#fff',
+            fontWeight: 600,
+          }}
+          itemStyle={{
+            color: '#fff',
+          }}
+        />
 
         <Area type="basis" dataKey="income" stroke={colorFirst} strokeWidth={2} fill={`url(#${id1})`} />
 

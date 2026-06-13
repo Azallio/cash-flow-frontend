@@ -2,10 +2,8 @@ import { TransactionsUi } from '.'
 import { useTransactionsWidget } from './service/hooks/use-transactions-widget'
 
 export const TransactionsWidget = () => {
-  const { filters, transactionsQuery, categoriesQuery, resolved, filtered, summary, mutations, infinite } =
+  const { filters, transactionsQuery, categoriesQuery, resolved, filtered, mutations, infinite } =
     useTransactionsWidget()
-
-  const balance = summary.income - summary.expense
 
   return (
     <div className="flex size-full flex-col gap-6 overflow-hidden p-4">
@@ -34,7 +32,6 @@ export const TransactionsWidget = () => {
         </div>
 
         <div className="flex h-full flex-1 flex-col gap-4">
-          <TransactionsUi.TransactionsSummary {...summary} balance={balance} />
           <TransactionsUi.TransactionCreateForm
             categories={categoriesQuery.data?.pages.flatMap((page) => page.items) || []}
             onCreateCategory={(p) => mutations.createCategory.mutateAsync(p)}
