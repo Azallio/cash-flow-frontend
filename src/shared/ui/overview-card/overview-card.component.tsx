@@ -10,9 +10,8 @@ type Props = SharedTypes.Ui.PropsWithClassName<{
 const formatMoney = (value: number) => `${value.toLocaleString('ru-RU')} ₽`
 
 export const OverviewCard = (props: Props) => {
-  const { className, ...restProps } = props
+  const { className, analyticsData, ...restProps } = props
 
-  const analyticsData = props.analyticsData
   const analytics = analyticsData
   const transactions = analyticsData?.transactions || []
 

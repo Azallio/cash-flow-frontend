@@ -1,3 +1,4 @@
+import { SharedLib } from '@shared'
 import { Consts } from '@shared/lib'
 import { ContentBlock } from '@shared/ui/content-block'
 import clsx from 'clsx'
@@ -7,8 +8,6 @@ type Props = {
   expense: number
   balance: number
 }
-
-const formatMoney = (value: number) => `${value.toLocaleString('ru-RU')} ₽`
 
 export const TransactionsSummary = (props: Props) => {
   const { income, expense, balance } = props
@@ -22,7 +21,7 @@ export const TransactionsSummary = (props: Props) => {
   return (
     <div className="flex flex-col gap-4 md:flex-row xl:flex-row">
       {Consts.TransactionSummaryCards.map((item) => (
-        <ContentBlock key={item.key} className="border-border border w-full flex-1 text-nowrap p-3.75!">
+        <ContentBlock key={item.key} className="border-border w-full flex-1 border p-3.75! text-nowrap">
           <p className="text-text-muted text-sm">{item.title}</p>
           <p
             className={clsx('text-2xl font-semibold', {
@@ -31,7 +30,7 @@ export const TransactionsSummary = (props: Props) => {
               'text-info': item.key === 'balance' && balance >= 0,
             })}
           >
-            {formatMoney(amountByKey[item.key])}
+            {SharedLib.Utils.formatMoney(amountByKey[item.key])}
           </p>
         </ContentBlock>
       ))}

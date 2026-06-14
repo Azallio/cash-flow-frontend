@@ -1,14 +1,12 @@
 import { SharedUi } from '@shared'
-import { TransactionTypeEnum } from '@shared/lib/enums'
 import useInfinityScroll from '@shared/service/hook/use-infinity-scroll.hook'
 import type { TransactionsResponse } from '@shared/types/http'
-import { Button } from '@shared/ui/button'
 import { ContentBlock } from '@shared/ui/content-block'
-import { Modal } from '@shared/ui/modal'
 import { pluralize } from '@widgets/transactions/lib/utils'
-import clsx from 'clsx'
 import { useCallback, useState } from 'react'
-import { TransactionLoader } from './transaction-loader.component'
+import { TransactionListItem } from './ui/transaction-list-item.component'
+import { TransactionLoader } from './ui/transaction-loader.component'
+import { TransactionRemoveModal } from './ui/transaction-remove-modal.component'
 
 type Props = {
   transactions: TransactionsResponse[]
@@ -19,30 +17,6 @@ type Props = {
   onLoadMore: () => void
   hasMore: boolean
   isLoadingMore: boolean
-}
-
-const formatMoney = (value: number) => `${value.toLocaleString('ru-RU')} ₽`
-
-const formatDate = (value: string): string => {
-  const date = new Date(value)
-  const now = new Date()
-
-  const isSameDay = (a: Date, b: Date) =>
-    a.getDate() === b.getDate() && a.getMonth() === b.getMonth() && a.getFullYear() === b.getFullYear()
-
-  if (isSameDay(date, now)) return 'Сегодня'
-
-  const yesterday = new Date(now)
-  yesterday.setDate(now.getDate() - 1)
-  if (isSameDay(date, yesterday)) return 'Вчера'
-
-  const isSameYear = date.getFullYear() === now.getFullYear()
-
-  return date.toLocaleString('ru-RU', {
-    day: 'numeric',
-    month: 'long',
-    ...(isSameYear ? {} : { year: 'numeric' }),
-  })
 }
 
 export const TransactionsList = (props: Props) => {
@@ -92,76 +66,26 @@ export const TransactionsList = (props: Props) => {
         {transactions.map((item, index) => {
           const isLast = index === transactions.length - 1
           return (
-            <div
-              key={item.id}
-              ref={isLast ? lastElementRef : undefined}
-              className="border-border group flex flex-col gap-2 rounded-xl border px-4 py-3 md:flex-row md:items-center md:justify-between"
-            >
-              {' '}
-              <div>
-                <p className="font-medium">{item.description}</p>
-                <p className="text-text-muted text-sm">
-                  {item.categoryId > 0
-                    ? (categoryMap[item.categoryId] ?? `Категория #${item.categoryId}`)
-                    : 'Без категории'}
-                </p>
-              </div>
-              <div className="flex w-40 items-center justify-between gap-4 text-sm">
-                <SharedUi.Button
-                  aria-label="Удалить транзакцию"
-                  className="invisible transition-all duration-200 group-hover:visible"
-                  variant="color:secondary size:sm"
-                  onClick={() => setDeleteTransactionId(item.id)}
-                >
-                  <SharedUi.Icon name="trash" className="h-4 w-4" />
-                </SharedUi.Button>
-
-                <div className="flex flex-col items-end">
-                  <span
-                    className={clsx(
-                      'font-semibold',
-                      item.transactionType === TransactionTypeEnum.INCOME ? 'text-success' : 'text-primary',
-                    )}
-                  >
-                    {item.transactionType === TransactionTypeEnum.INCOME ? '+' : '-'}
-                    {formatMoney(item.amount)}
-                  </span>
-                  <span className="text-text-muted">{formatDate(item.createdAt)}</span>
-                </div>
-              </div>
-            </div>
+            <TransactionListItem
+              key={item.id + item.createdAt + index}
+              item={item}
+              index={index}
+              isLast={isLast}
+              lastElementRef={isLast ? lastElementRef : undefined}
+              categoryMap={categoryMap}
+              setDeleteTransactionId={setDeleteTransactionId}
+            />
           )
         })}
       </div>
 
-      <Modal
-        opened={deleteTransactionId !== null}
+      <TransactionRemoveModal
+        isOpen={deleteTransactionId !== null}
         onClose={() => setDeleteTransactionId(null)}
-        title="Удалить транзакцию"
-      >
-        <div className="flex flex-col gap-4">
-          <p className="text-sm">Вы уверены, что хотите удалить эту транзакцию?</p>
-
-          <div className="flex items-center justify-end gap-2">
-            <Button
-              variant="color:secondary size:md"
-              type="button"
-              onClick={() => setDeleteTransactionId(null)}
-              disabled={isDeleteTransactionPending}
-            >
-              Отмена
-            </Button>
-            <Button
-              variant="color:primary size:md"
-              type="button"
-              onClick={handleDeleteTransaction}
-              disabled={isDeleteTransactionPending}
-            >
-              {isDeleteTransactionPending ? 'Удаление...' : 'Удалить'}
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        isDeleteTransactionPending={isDeleteTransactionPending}
+        handleDeleteTransaction={handleDeleteTransaction}
+        setDeleteTransactionId={setDeleteTransactionId}
+      />
     </ContentBlock>
   )
 }

@@ -4,7 +4,6 @@ import clsx from 'clsx'
 type Props = SharedTypes.Ui.PropsWithClassName<{
   budget: number
   expenses: number
-  expensesPercent: number
 }>
 
 const currentMonth = new Date().toLocaleString('ru-RU', {
@@ -22,7 +21,9 @@ export const MonthlyBudget = (props: Props) => {
     <SharedUi.ContentBlock className={clsx(className, 'flex h-max w-full flex-col gap-4')} {...restProps}>
       <article className="flex justify-between">
         <h3 className="text-lg">Бюджет на {currentMonth}</h3>
-        <SharedUi.Button disabled className="text-primary">Настроить</SharedUi.Button>
+        <SharedUi.Button disabled className="text-primary">
+          Настроить
+        </SharedUi.Button>
       </article>
 
       <article className="flex flex-col">

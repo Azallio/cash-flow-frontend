@@ -2,7 +2,7 @@ import { MantineProvider } from '@mantine/core'
 import '@mantine/core/styles.css'
 import { ThemeProvider } from '@shared/service/provider/theme-provider.component'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router'
+import { Outlet, Scripts, ScrollRestoration } from 'react-router'
 import type { Route } from './+types/root'
 import './app.css'
 
@@ -21,24 +21,16 @@ export function Layout(props: React.PropsWithChildren) {
   })
 
   return (
-    <html>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Cash Flow App</title>
-        <Meta />
-        <Links />
-        <script src="src/shared/lib/utils/init-theme.util.ts" defer />
-      </head>
-
+    <html suppressHydrationWarning>
       <body>
         <QueryClientProvider client={queryClient}>
           <MantineProvider defaultColorScheme="dark">
             <ThemeProvider defaultMode="dark">{children}</ThemeProvider>
-            <ScrollRestoration />
-            <Scripts />
           </MantineProvider>
         </QueryClientProvider>
+
+        <ScrollRestoration />
+        <Scripts />
       </body>
     </html>
   )

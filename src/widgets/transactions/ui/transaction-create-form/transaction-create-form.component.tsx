@@ -3,8 +3,12 @@ import type { CategoryResponse } from '@shared/types/http'
 import type { CreateCategoryPayload, CreateTransactionPayload } from '@widgets/transactions/api/method'
 import { useCreateCategoryForm, useCreateTransactionForm } from '@widgets/transactions/model'
 import { useMemo, useState } from 'react'
-import * as TransactionCreateFormUi from './ui'
-import { CategorySettingsModal } from './ui/category-settings-modal.component'
+import {
+  CategoryCreateModal,
+  CategorySettingsModal,
+  TransactionCategorySelect,
+  TransactionTypeToggleButton,
+} from './ui'
 
 type Props = {
   categories: CategoryResponse[]
@@ -59,7 +63,7 @@ export const TransactionCreateForm = (props: Props) => {
       <form className="flex flex-col gap-3" onSubmit={transactionForm.submit}>
         <div className="border-border grid grid-cols-2 gap-2 rounded-xl border p-1">
           {SharedLib.Consts.TransactionTypeToggleOptions.map((item) => (
-            <TransactionCreateFormUi.TransactionTypeToggleButton
+            <TransactionTypeToggleButton
               key={item.value}
               item={item}
               transactionType={transactionType}
@@ -88,7 +92,7 @@ export const TransactionCreateForm = (props: Props) => {
 
         <div>
           <label className="text-sm font-semibold">Категория</label>
-          <TransactionCreateFormUi.TransactionCategorySelect
+          <TransactionCategorySelect
             transactionForm={transactionForm}
             categoriesByTransactionType={categoriesByTransactionType}
             setIsCategoryModalOpened={setIsCategoryModalOpened}
@@ -108,7 +112,7 @@ export const TransactionCreateForm = (props: Props) => {
           {isCreateTransactionPending ? 'Сохранение...' : 'Добавить транзакцию'}
         </SharedUi.Button>
       </form>
-      <TransactionCreateFormUi.CategoryCreateModal
+      <CategoryCreateModal
         isCategoryModalOpened={isCategoryModalOpened}
         setIsCategoryModalOpened={setIsCategoryModalOpened}
         categoryForm={categoryForm}

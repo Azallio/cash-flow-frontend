@@ -17,11 +17,7 @@ export default function IndexRoute() {
           setSortChartPeriod={setSortChartPeriod}
         />
         <div className="flex w-1/3 flex-col gap-4">
-          <SharedUi.MonthlyBudget
-            budget={12000}
-            expensesPercent={analyticsData?.totalExpensePercent ?? 0}
-            expenses={analyticsData?.totalExpense ?? 0}
-          />
+          <SharedUi.MonthlyBudget budget={12000} expenses={analyticsData?.totalExpense ?? 0} />
           <SharedUi.TopExpenseCategories />
         </div>
       </div>

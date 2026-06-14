@@ -10,3 +10,4 @@ export {
   TransactionTypeToggleOptions,
   type TransactionFilterType,
 } from './transactions-page.const'
+export { NavbarLinks } from './navbar-links.const'
