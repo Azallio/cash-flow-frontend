@@ -4,8 +4,6 @@ import type { CreateTransactionPayload } from '@widgets/transactions/api/method'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { createTransactionSchema, type CreateTransactionFormValues } from './create-transaction.schema'
 
-const toIsoStartOfDay = (date: string) => new Date(`${date}T00:00:00.000Z`).toISOString()
-
 type Params = {
   transactionType: TransactionTypeEnum
 
@@ -19,7 +17,9 @@ export const useCreateTransactionForm = ({ transactionType, onCreateTransaction 
     defaultValues: {
       description: '',
       categoryId: 0,
-      createdAt: new Date().toISOString().slice(0, 10),
+      createdAt: new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16),
     },
   })
 
@@ -28,7 +28,9 @@ export const useCreateTransactionForm = ({ transactionType, onCreateTransaction 
     await onCreateTransaction({
       ...values,
       description: values.description.trim() || 'Без описания',
-      createdAt: toIsoStartOfDay(values.createdAt),
+      createdAt: new Date(
+        new Date(values.createdAt).getTime() - new Date(values.createdAt).getTimezoneOffset() * 60000,
+      ).toISOString(),
       transactionType,
     })
   }

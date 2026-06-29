@@ -6,7 +6,7 @@ import { Outlet, Scripts, ScrollRestoration } from 'react-router'
 import type { Route } from './+types/root'
 import './app.css'
 
-export const links: Route.LinksFunction = () => [{ rel: 'icon', href: '/favicon.png', type: 'image/png' }]
+export const links: Route.LinksFunction = () => [{ rel: 'icon', href: '/favicon.svg', type: 'image/png' }]
 
 export function Layout(props: React.PropsWithChildren) {
   const { children } = props

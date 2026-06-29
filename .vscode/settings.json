@@ -50,5 +50,15 @@
     ".*ClassNames"
   ],
   "tailwindCSS.classFunctions": ["clsx"],
-  "cSpell.words": ["Войти", "Входим", "Expence"]
+  "cSpell.words": [
+    "Войти",
+    "Входим",
+    "День",
+    "Динамика",
+    "доходов",
+    "Месяц",
+    "расходов",
+    "Expence",
+    "sparkline"
+  ]
 }

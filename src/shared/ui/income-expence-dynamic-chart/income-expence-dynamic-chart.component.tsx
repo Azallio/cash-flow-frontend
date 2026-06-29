@@ -9,21 +9,32 @@ type Props = SharedTypes.Ui.PropsWithClassName<{
   setSortChartPeriod: React.Dispatch<React.SetStateAction<'day' | 'month' | 'year'>>
 }>
 
+type SparklineDataPoint = {
+  income: number
+  expense: number
+}
+
 export const IncomeExpenceDynamicChart = (props: Props) => {
   const { className, analyticsData, sortChartPeriod, setSortChartPeriod, ...restProps } = props
 
-  const analyticsForDoubleSparkLine =
-    analyticsData?.transactions.map((t) => ({
-      income: t.transactionType === TransactionTypeEnum.INCOME ? t.amount : 0,
-      expense: t.transactionType === TransactionTypeEnum.EXPENSE ? t.amount : 0,
-      date: new Date(t.createdAt).toLocaleDateString('ru-RU'),
-    })) || []
+  const transactions = analyticsData?.transactions || []
 
-  const sortedAnalyticsForDoubleSparkLine = analyticsForDoubleSparkLine.sort((a, b) => {
-    const dateA = new Date(a.date.split('.').reverse().join('-')).getTime()
-    const dateB = new Date(b.date.split('.').reverse().join('-')).getTime()
-    return dateA - dateB
-  })
+  const groupedByDate = transactions.reduce<Map<string, SparklineDataPoint>>((map, t) => {
+    const date = new Date(t.createdAt).toLocaleDateString('ru-RU')
+    const existing = map.get(date) ?? { income: 0, expense: 0 }
+
+    if (t.transactionType === TransactionTypeEnum.INCOME) {
+      existing.income += t.amount
+    } else {
+      existing.expense += t.amount
+    }
+
+    return map.set(date, existing)
+  }, new Map())
+
+  const sparklineData = Array.from(groupedByDate.entries())
+    .map(([date, value]) => ({ date, value }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   const sortOptions = [
     { value: 'day', label: 'День' },
@@ -38,7 +49,6 @@ export const IncomeExpenceDynamicChart = (props: Props) => {
     >
       <div className="flex w-full items-center justify-between">
         <h2 className="text-2xl">Динамика доходов и расходов</h2>
-
         <SharedUi.Select
           data={sortOptions}
           value={sortChartPeriod}
@@ -50,7 +60,12 @@ export const IncomeExpenceDynamicChart = (props: Props) => {
           }}
         />
       </div>
-      <SharedUi.DoubleSparkLine className="h-80! w-full" data={sortedAnalyticsForDoubleSparkLine} />
+      <SharedUi.Sparkline<SparklineDataPoint, 'multi'>
+        className="h-80! w-full"
+        data={sparklineData}
+        dataTypeNames={['income', 'expense']}
+        color={['#4caf50', '#f44336']}
+      />
     </SharedUi.ContentBlock>
   )
 }

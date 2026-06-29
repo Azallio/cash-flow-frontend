@@ -72,7 +72,8 @@ export const OverviewCard = (props: Props) => {
 
               <p className={'text-2xl'}>{item.value !== undefined ? formatMoney(item.value) : '-'}</p>
 
-              <SharedUi.SparkLine
+              <SharedUi.Sparkline<number, 'single'>
+                dataTypeNames={['value']}
                 data={item.chart}
                 color={index === 0 ? '#22c55e' : index === 1 ? '#ef4444' : '#41b3ab'}
               />
