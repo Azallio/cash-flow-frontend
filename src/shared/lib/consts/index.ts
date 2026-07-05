@@ -11,3 +11,4 @@ export {
   type TransactionFilterType,
 } from './transactions-page.const'
 export { NavbarLinks } from './navbar-links.const'
+export { TransactionTypeNameTranslations } from './transaction-type-name-translations.const'

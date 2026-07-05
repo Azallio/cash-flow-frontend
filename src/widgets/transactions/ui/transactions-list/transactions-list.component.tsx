@@ -32,6 +32,8 @@ export const TransactionsList = (props: Props) => {
   } = props
   const [deleteTransactionId, setDeleteTransactionId] = useState<number | null>(null)
 
+  console.table(transactions)
+
   const handleDeleteTransaction = async () => {
     if (!deleteTransactionId) {
       return

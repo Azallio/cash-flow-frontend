@@ -1,6 +1,5 @@
 import { Select as MantineSelect, type SelectProps } from '@mantine/core'
 import { selectVariantClassNames } from '@shared/lib/consts/select-classname.const'
-import { useTheme } from '@shared/service'
 
 type SelectOption = {
   value: string
@@ -25,8 +24,6 @@ type Props = {
 export const Select = (props: Props) => {
   const { className, classNames, searchable, clearable, ...restProps } = props
 
-  const { mode } = useTheme()
-
   return (
     <MantineSelect
       checkIconPosition="right"
@@ -40,7 +37,7 @@ export const Select = (props: Props) => {
           timingFunction: 'ease',
         },
       }}
-      classNames={{ ...selectVariantClassNames[mode], ...classNames }}
+      classNames={{ ...selectVariantClassNames, ...classNames }}
       {...restProps}
     />
   )

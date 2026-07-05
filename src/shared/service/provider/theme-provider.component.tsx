@@ -1,3 +1,4 @@
+import { MantineProvider } from '@mantine/core'
 import { useEffect, useState } from 'react'
 import { ThemeContext, type ThemeMode } from '../context/theme.context'
 
@@ -39,5 +40,9 @@ export const ThemeProvider = (props: Props) => {
     setMode((prev) => (prev === 'light' ? 'dark' : 'light'))
   }
 
-  return <ThemeContext.Provider value={{ mode, toggle }}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider value={{ mode, toggle }}>
+      <MantineProvider forceColorScheme={mode}>{children}</MantineProvider>
+    </ThemeContext.Provider>
+  )
 }

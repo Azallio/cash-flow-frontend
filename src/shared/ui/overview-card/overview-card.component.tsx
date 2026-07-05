@@ -1,5 +1,6 @@
-import { type SharedTypes, SharedUi } from '@shared'
+import { SharedLib, type SharedTypes, SharedUi } from '@shared'
 import { TransactionTypeEnum } from '@shared/lib/enums'
+import { buildCumulativeChart } from '@shared/lib/utils'
 import { UserApiService } from '@units/user'
 import clsx from 'clsx'
 
@@ -15,36 +16,26 @@ export const OverviewCard = (props: Props) => {
   const analytics = analyticsData
   const transactions = analyticsData?.transactions || []
 
-  const mapTransactionToPoint = (transaction: (typeof transactions)[number]) => ({
-    value: transaction.amount,
-    date: new Date(transaction.createdAt).toLocaleDateString('ru-RU'),
-  })
+  transactions.sort(SharedLib.Utils.sortByField('createdAt'))
 
   const analyticsCardData = [
     {
       title: 'Доходы',
       value: analytics?.totalIncome,
-      change: analytics?.totalIncomePercent || 0,
-      chart: transactions
-        .filter((t) => t.transactionType === TransactionTypeEnum.INCOME)
-        .map(mapTransactionToPoint),
+      changePercent: analytics?.totalIncomePercent || 0,
+      chart: buildCumulativeChart(transactions, TransactionTypeEnum.INCOME),
     },
     {
       title: 'Расходы',
       value: analytics?.totalExpense,
-      change: analytics?.totalExpensePercent || 0,
-      chart: transactions
-        .filter((t) => t.transactionType === TransactionTypeEnum.EXPENSE)
-        .map(mapTransactionToPoint),
+      changePercent: analytics?.totalExpensePercent || 0,
+      chart: buildCumulativeChart(transactions, TransactionTypeEnum.EXPENSE),
     },
     {
       title: 'Баланс',
       value: analytics?.netBalance,
-      change: analytics?.netBalancePercent || 0,
-      chart: transactions.map((t) => ({
-        value: t.transactionType === TransactionTypeEnum.INCOME ? t.amount : -t.amount,
-        date: new Date(t.createdAt).toLocaleDateString('ru-RU'),
-      })),
+      changePercent: analytics?.netBalancePercent || 0,
+      chart: buildCumulativeChart(transactions),
     },
   ]
 
@@ -52,7 +43,7 @@ export const OverviewCard = (props: Props) => {
     <div className={clsx('flex w-full flex-col gap-6 pb-4', className)} {...restProps}>
       <div>
         <h1 className="text-3xl">Обзор</h1>
-        <span className="text-md text-gray-400">Аналитика ваших финансов</span>
+        <span className="text-md text-gray-400">Аналитика ваших финансов в сравнении с прошлым периодом</span>
       </div>
       <div className="flex w-full justify-between gap-4">
         {analyticsCardData.map((item, index) => (
@@ -63,10 +54,17 @@ export const OverviewCard = (props: Props) => {
                 <span
                   className={clsx(
                     'text-sm font-medium',
-                    item.change > 0 ? 'text-green-500' : item.change < 0 ? 'text-red-500' : 'text-gray-400',
+                    item.changePercent > 0
+                      ? 'text-green-500'
+                      : item.changePercent < 0
+                        ? 'text-red-500'
+                        : 'text-gray-400',
+                    item.title === 'Расходы' && item.changePercent > 0 ? 'text-red-500!' : 'text-green-500',
                   )}
                 >
-                  {item.change === 0 ? '0%' : `${item.change > 0 ? '+' : ''}${item.change}%`}
+                  {item.changePercent === 0
+                    ? '0%'
+                    : `${item.changePercent > 0 ? '+' : ''}${item.changePercent}%`}
                 </span>
               </div>
 

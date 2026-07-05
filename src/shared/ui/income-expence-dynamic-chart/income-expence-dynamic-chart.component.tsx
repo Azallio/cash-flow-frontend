@@ -1,5 +1,4 @@
-import { type SharedTypes, SharedUi } from '@shared'
-import { TransactionTypeEnum } from '@shared/lib/enums'
+import { SharedLib, type SharedTypes, SharedUi } from '@shared'
 import type { UserApiService } from '@units/user'
 import clsx from 'clsx'
 
@@ -9,32 +8,16 @@ type Props = SharedTypes.Ui.PropsWithClassName<{
   setSortChartPeriod: React.Dispatch<React.SetStateAction<'day' | 'month' | 'year'>>
 }>
 
-type SparklineDataPoint = {
-  income: number
-  expense: number
-}
-
 export const IncomeExpenceDynamicChart = (props: Props) => {
   const { className, analyticsData, sortChartPeriod, setSortChartPeriod, ...restProps } = props
 
   const transactions = analyticsData?.transactions || []
 
-  const groupedByDate = transactions.reduce<Map<string, SparklineDataPoint>>((map, t) => {
-    const date = new Date(t.createdAt).toLocaleDateString('ru-RU')
-    const existing = map.get(date) ?? { income: 0, expense: 0 }
-
-    if (t.transactionType === TransactionTypeEnum.INCOME) {
-      existing.income += t.amount
-    } else {
-      existing.expense += t.amount
-    }
-
-    return map.set(date, existing)
-  }, new Map())
+  const groupedByDate = SharedLib.Utils.groupTransactionsByDate(transactions)
 
   const sparklineData = Array.from(groupedByDate.entries())
     .map(([date, value]) => ({ date, value }))
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .sort(SharedLib.Utils.sortByField('date'))
 
   const sortOptions = [
     { value: 'day', label: 'День' },
@@ -60,7 +43,7 @@ export const IncomeExpenceDynamicChart = (props: Props) => {
           }}
         />
       </div>
-      <SharedUi.Sparkline<SparklineDataPoint, 'multi'>
+      <SharedUi.Sparkline<SharedTypes.Ui.SparklineDataPoint, 'multi'>
         className="h-80! w-full"
         data={sparklineData}
         dataTypeNames={['income', 'expense']}

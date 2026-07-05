@@ -1,4 +1,4 @@
-import { ColorSchemeScript, MantineProvider } from '@mantine/core'
+import { ColorSchemeScript } from '@mantine/core'
 import '@mantine/core/styles.css'
 import { ThemeProvider } from '@shared/service/provider/theme-provider.component'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -22,7 +22,7 @@ export function Layout(props: React.PropsWithChildren) {
   const { children } = props
 
   return (
-    <html suppressHydrationWarning>
+    <html suppressHydrationWarning data-theme="dark">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -32,9 +32,7 @@ export function Layout(props: React.PropsWithChildren) {
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
-          <MantineProvider defaultColorScheme="dark">
-            <ThemeProvider defaultMode="dark">{children}</ThemeProvider>
-          </MantineProvider>
+          <ThemeProvider defaultMode="dark">{children}</ThemeProvider>
         </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />

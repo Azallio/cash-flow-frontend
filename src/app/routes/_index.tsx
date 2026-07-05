@@ -1,5 +1,6 @@
 import { SharedUi } from '@shared'
 import { UserApiService } from '@units/user'
+import { BudgetUi } from '@widgets/budget'
 import { Layout } from '@widgets/layout/layout.component'
 import { useState } from 'react'
 
@@ -17,7 +18,7 @@ export default function IndexRoute() {
           setSortChartPeriod={setSortChartPeriod}
         />
         <div className="flex w-1/3 flex-col gap-4">
-          <SharedUi.MonthlyBudget budget={12000} expenses={analyticsData?.totalExpense ?? 0} />
+          <BudgetUi.MonthlyBudget />
           <SharedUi.TopExpenseCategories />
         </div>
       </div>

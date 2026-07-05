@@ -17,10 +17,7 @@ export const Input = (props: Props) => {
 
   return (
     <TextInput
-      classNames={
-        (inputVariantClassNames['dark'],
-        { input: inputVariantClassNames['dark'].input + (type === 'date' && ' uppercase') })
-      }
+      classNames={{ input: inputVariantClassNames.input + (type === 'date' && ' uppercase') }}
       defaultValue={defaultValue}
       label={label}
       placeholder={placeholder}

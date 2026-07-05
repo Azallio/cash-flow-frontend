@@ -41,7 +41,7 @@ body {
 
   --border: #2a2f38;
 
-  --primary: #FA003F;
+  --primary: #fa003f;
 
   --success: #7cff5a;
   --info: #35d9f7;
@@ -49,6 +49,9 @@ body {
 }
 
 @theme {
+
+	
+
   --font-sf-pro: 'SF Pro Display', ui-sans-serif, system-ui, sans-serif;
 
   --color-bg: var(--bg);

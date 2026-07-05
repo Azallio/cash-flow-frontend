@@ -1,4 +1,4 @@
-import { type SharedTypes } from '@shared'
+import { SharedLib, type SharedTypes } from '@shared'
 import clsx from 'clsx'
 import React from 'react'
 import { Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
@@ -63,18 +63,23 @@ export const Sparkline = <T, Type extends SparklineType>(props: SparklineProps<T
               if (!active || !point) return null
               return (
                 <div className="flex w-40! flex-col gap-1 bg-transparent">
-                  <div className='text-gray-400'>{point.date}</div>
+                  <div className="text-gray-400">{SharedLib.Utils.formatDate(point.date)}</div>
                   {dataTypeNames.map((name) => (
                     <div
                       key={name}
                       className={clsx(
-                        'flex items-center gap-2 text-sm',
-                        point[name] === 0 && 'opacity-50',
+                        'flex items-center gap-2 text-sm font-semibold',
+                        point[name] === 0 && 'opacity-25',
                         name === 'income' && 'text-green-500',
                         name === 'expense' && 'text-red-500',
                       )}
                     >
-                      {name}: {point[name]} ₽
+                      {
+                        SharedLib.Consts.TransactionTypeNameTranslations[
+                          name as keyof typeof SharedLib.Consts.TransactionTypeNameTranslations
+                        ]
+                      }{' '}
+                      {point[name]} ₽
                     </div>
                   ))}
                 </div>
