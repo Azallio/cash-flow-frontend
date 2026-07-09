@@ -1,5 +1,6 @@
 import { ColorSchemeScript } from '@mantine/core'
 import '@mantine/core/styles.css'
+import '@mantine/dates/styles.css'
 import { ThemeProvider } from '@shared/service/provider/theme-provider.component'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router'

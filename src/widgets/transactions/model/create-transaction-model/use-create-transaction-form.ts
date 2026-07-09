@@ -24,7 +24,6 @@ export const useCreateTransactionForm = ({ transactionType, onCreateTransaction 
   })
 
   const onSubmit: SubmitHandler<CreateTransactionFormValues> = async (values) => {
-    console.log(values)
     await onCreateTransaction({
       ...values,
       description: values.description.trim() || 'Без описания',

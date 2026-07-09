@@ -1,6 +1,7 @@
 const API_URL = 'http://31.177.82.234:3000/api/transactions'
 
-const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3ODA1MjkxMjMsImV4cCI6MTc4MDYxNTUyM30.nT2zIDMmGb1G4av7kZkiaVEquMObwsURnNKmkmnznfI'
+const TOKEN =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiam9obi5kb2VAZXhhbXBsZS5jb20iLCJpYXQiOjE3ODA1MjkxMjMsImV4cCI6MTc4MDYxNTUyM30.nT2zIDMmGb1G4av7kZkiaVEquMObwsURnNKmkmnznfI'
 
 // 👇 подставь реальные categoryId (у тебя 2–6 есть)
 const CATEGORY_IDS = [2, 3, 4, 5, 6]
@@ -88,8 +89,8 @@ async function seed() {
       batch.map((tx) =>
         createTransaction(tx)
           .then((r) => console.log('Created:', r.id ?? r))
-          .catch((e) => console.error('Error:', e.message))
-      )
+          .catch((e) => console.error('Error:', e.message)),
+      ),
     )
   }
 

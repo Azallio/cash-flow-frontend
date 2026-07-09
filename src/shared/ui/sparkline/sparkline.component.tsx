@@ -4,7 +4,7 @@ import React from 'react'
 import { Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
 
 type SparkLineDate<T> = {
-  date: string
+  date: string extends string | number | Date ? string : never
   value: T
 }
 
@@ -49,11 +49,7 @@ export const Sparkline = <T, Type extends SparklineType>(props: SparklineProps<T
             axisLine={false}
             interval="preserveStartEnd" //
             tickFormatter={(value) => {
-              return new Date(value).toLocaleDateString('ru-RU', {
-                day: '2-digit',
-                month: '2-digit',
-                year: '2-digit',
-              })
+              return SharedLib.Utils.formatDate(value)
             }}
           />
           <Tooltip
