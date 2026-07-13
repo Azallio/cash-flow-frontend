@@ -1,8 +1,8 @@
 import { SharedApi, type SharedTypes } from '@shared'
 import type { TransactionTypeEnum } from '@shared/lib/enums'
-import type { TransactionsResponse } from '@shared/types/http'
+import type { TransactionsTypes } from '@widgets/transactions'
 
-type RawTransactionsResponse = Omit<TransactionsResponse, 'categoryId'> & {
+type RawTransactionsResponse = Omit<TransactionsTypes.Http.Transaction, 'categoryId'> & {
   categoryId?: number | null
   categoryID?: number | null
   category_id?: number | null

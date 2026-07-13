@@ -1,18 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
-import type { TransactionTypeEnum } from '@shared/lib/enums'
-import type { CategoryResponse } from '@shared/types/http'
-
-import type { CreateCategoryPayload } from '@widgets/transactions/api/method'
+import type { SharedLib, SharedTypes } from '@shared'
+import type { TransactionsApi } from '@widgets/transactions'
 
 import { createCategorySchema, type CreateCategoryFormValues } from './create-category.schema'
 
 type Params = {
-  transactionType: TransactionTypeEnum
-  onCreateCategory: (payload: CreateCategoryPayload) => Promise<CategoryResponse>
+  transactionType: SharedLib.Enums.TransactionTypeEnum
+  onCreateCategory: (
+    payload: TransactionsApi.Methods.CreateCategoryPayload,
+  ) => Promise<SharedTypes.Http.CategoryResponse>
 
-  onSuccess?: (category: CategoryResponse) => void
+  onSuccess?: (category: SharedTypes.Http.CategoryResponse) => void
 }
 
 export const useCreateCategoryForm = ({ transactionType, onCreateCategory, onSuccess }: Params) => {

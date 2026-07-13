@@ -1,6 +1,5 @@
 import { SharedApi, type SharedTypes } from '@shared'
 import type { TransactionTypeEnum } from '@shared/lib/enums'
-import type { CategoryResponse } from '@shared/types/http'
 
 export type CreateCategoryPayload = {
   title: string
@@ -9,10 +8,9 @@ export type CreateCategoryPayload = {
 }
 
 export const postCategory = async (payload: CreateCategoryPayload) => {
-  const res = await SharedApi.baseClient.post<SharedTypes.Http.BaseApiResponse<CategoryResponse>>(
-    '/category',
-    payload,
-  )
+  const res = await SharedApi.baseClient.post<
+    SharedTypes.Http.BaseApiResponse<SharedTypes.Http.CategoryResponse>
+  >('/category', payload)
 
   return res.data.data
 }

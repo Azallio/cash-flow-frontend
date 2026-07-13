@@ -1,7 +1,7 @@
-import type { TransactionsResponse } from '@shared/types/http'
+import type { TransactionsTypes } from '@widgets/transactions'
 
 type Params = {
-  transactions: TransactionsResponse[]
+  transactions: TransactionsTypes.Http.Transaction[]
   search: string
   categoryMap: Record<number, string>
 }

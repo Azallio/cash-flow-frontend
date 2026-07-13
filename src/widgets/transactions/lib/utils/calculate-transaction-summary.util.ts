@@ -1,16 +1,16 @@
-import { TransactionTypeEnum } from '@shared/lib/enums'
-import type { TransactionsResponse } from '@shared/types/http'
+import { SharedLib } from '@shared'
+import type { TransactionsTypes } from '@widgets/transactions'
 
 type Params = {
-  transactions: TransactionsResponse[]
+  transactions: TransactionsTypes.Http.Transaction[]
 }
 
 export const calculateTransactionSummary = ({ transactions }: Params) => {
   return transactions.reduce(
     (acc, item) => {
-      if (item.transactionType === TransactionTypeEnum.INCOME) {
+      if (item.transactionType === SharedLib.Enums.TransactionTypeEnum.INCOME) {
         acc.income += item.amount
-      } else if (item.transactionType === TransactionTypeEnum.EXPENSE) {
+      } else if (item.transactionType === SharedLib.Enums.TransactionTypeEnum.EXPENSE) {
         acc.expense += item.amount
       }
 

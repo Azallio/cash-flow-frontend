@@ -54,7 +54,10 @@ export function IncomeExpenseDynamicsSparkline(props: Props) {
       <SharedUi.Sparkline<SharedTypes.Ui.SparklineDataPoint, 'multi'>
         className="h-80! w-full"
         data={SparkLineNormalizedData}
-        dataTypeNames={['income', 'expense']}
+        accentedValues={[
+          { name: 'income', color: 'text-green-500' },
+          { name: 'expense', color: 'text-red-500' },
+        ]}
         color={['#4caf50', '#f44336']}
       />
     </SharedUi.ContentBlock>

@@ -3,8 +3,9 @@ import type { Ui } from '@shared/types'
 import clsx from 'clsx'
 
 const ColorClassNames = {
-  primary: 'text-white bg-primary hover:bg-ubc-blue-500',
-  secondary: 'text-glaucous-400 bg-glaucous-50 hover:text-black hover:bg-white',
+  primary: 'text-white bg-primary hover:bg-primary/50',
+  secondary:
+    'hover:text-black hover:bg-white hover:border border-gray-100 duration-500 transition-colors border',
   none: '',
 } as const
 
@@ -13,7 +14,7 @@ type Color = keyof typeof ColorClassNames
 const SizeClassNames = {
   sm: 'py-3 px-4',
   md: 'py-2 px-4 md:py-3 md:px-6',
-	lg: 'py-3 px-6',
+  lg: 'py-3 px-6',
   none: '',
 } as const
 

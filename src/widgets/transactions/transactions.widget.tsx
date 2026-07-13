@@ -14,6 +14,7 @@ export const TransactionsWidget = () => {
             filterValues={filters}
             onTypeFilterChange={filters.setTypeFilter}
             onFilterChange={filters.setField}
+            onDateRangeChange={filters.setDateRange}
             onReset={filters.reset}
           />
 

@@ -1,7 +1,7 @@
 import { SharedLib, type SharedTypes } from '@shared'
-import clsx from 'clsx'
 import React from 'react'
 import { Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
+import { SparklineTooltip } from './sparkline-tooltip.component'
 
 type SparkLineDate<T> = {
   date: string extends string | number | Date ? string : never
@@ -10,9 +10,14 @@ type SparkLineDate<T> = {
 
 type SparklineType = 'single' | 'multi'
 
+type AccentedValues = {
+  name: string
+  color: string
+}
+
 type SparklineProps<T, Type extends SparklineType> = SharedTypes.Ui.PropsWithClassName<{
   data: SparkLineDate<T>[]
-  dataTypeNames: string[]
+  accentedValues: AccentedValues[]
   color?: Type extends 'single' ? string : string[]
 }>
 
@@ -22,16 +27,16 @@ const useGetGradientIds = (count: number) => {
 }
 
 export const Sparkline = <T, Type extends SparklineType>(props: SparklineProps<T, Type>) => {
-  const { className, data, color, dataTypeNames, ...restProps } = props
+  const { className, data, color, accentedValues = [], ...restProps } = props
   const chartData = data.map((item) => ({
     date: item.date,
     ...(typeof item.value === 'object' ? item.value : { value: item.value }),
   }))
-  const gradientIds = useGetGradientIds(dataTypeNames.length)
+  const gradientIds = useGetGradientIds(accentedValues.length)
 
   return (
     <div className={className} {...restProps}>
-      <ResponsiveContainer width="100%" height={dataTypeNames.length < 2 ? 100 : undefined}>
+      <ResponsiveContainer width="100%" height={accentedValues.length < 2 ? 100 : undefined}>
         <ComposedChart data={chartData} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
           <defs>
             {gradientIds.map((id, index) => (
@@ -58,32 +63,16 @@ export const Sparkline = <T, Type extends SparklineType>(props: SparklineProps<T
               const point = payload?.[0]?.payload
               if (!active || !point) return null
               return (
-                <div className="flex w-40! flex-col gap-1 bg-transparent">
-                  <div className="text-gray-400">{SharedLib.Utils.formatDate(point.date)}</div>
-                  {dataTypeNames.map((name) => (
-                    <div
-                      key={name}
-                      className={clsx(
-                        'flex items-center gap-2 text-sm font-semibold',
-                        point[name] === 0 && 'opacity-25',
-                        name === 'income' && 'text-green-500',
-                        name === 'expense' && 'text-red-500',
-                      )}
-                    >
-                      {
-                        SharedLib.Consts.TransactionTypeNameTranslations[
-                          name as keyof typeof SharedLib.Consts.TransactionTypeNameTranslations
-                        ]
-                      }{' '}
-                      {point[name]} ₽
-                    </div>
-                  ))}
-                </div>
+                <SparklineTooltip
+                  point={point}
+                  accentedValues={accentedValues}
+                  color={Array.isArray(color) ? color[0] : color}
+                />
               )
             }}
           />
 
-          {dataTypeNames.map((name, index) => (
+          {accentedValues.map(({ name }, index) => (
             <Area
               key={`area-${name}`}
               type="monotone"
@@ -93,7 +82,7 @@ export const Sparkline = <T, Type extends SparklineType>(props: SparklineProps<T
             />
           ))}
 
-          {dataTypeNames.map((name, index) => (
+          {accentedValues.map(({ name }, index) => (
             <Line
               key={name}
               type="monotone"

@@ -2,15 +2,12 @@ import { TransactionsService } from '@widgets/transactions'
 import { calculateTransactionSummary, filterTransactions } from '@widgets/transactions/lib/utils'
 import { useMemo } from 'react'
 
-const toIso = (date: string, isEnd = false) =>
-  new Date(`${date}T${isEnd ? '23:59:59.999' : '00:00:00.000'}Z`).toISOString()
-
 export const useTransactionsWidget = () => {
   const filters = TransactionsService.Hooks.useTransactionsFilters()
 
   const queryType = filters.typeFilter === 'ALL' ? undefined : filters.typeFilter
-  const queryStartDate = filters.startDate ? toIso(filters.startDate) : undefined
-  const queryEndDate = filters.endDate ? toIso(filters.endDate, true) : undefined
+  const queryStartDate = filters.startDate ? filters.startDate : undefined
+  const queryEndDate = filters.endDate ? filters.endDate : undefined
 
   const transactionsQuery = TransactionsService.Query.useTransactionsInfiniteQuery({
     transactionType: queryType,

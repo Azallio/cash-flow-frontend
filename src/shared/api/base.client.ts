@@ -1,5 +1,4 @@
-import { SharedLib } from '@shared'
-import type { AuthTokens, BaseApiResponse } from '@shared/types/http'
+import { SharedLib, type SharedTypes } from '@shared'
 import axios from 'axios'
 import { LocalStorageClient } from './clients/local-storage.client'
 import { mutexClient } from './clients/mutex.client'
@@ -17,10 +16,13 @@ const refreshTokens = async () => {
     throw new Error('No auth tokens')
   }
 
-  const { data } = await instance.post<BaseApiResponse<AuthTokens>>('/auth/refresh', {
-    accessToken: tokens.accessToken,
-    refreshToken: tokens.refreshToken,
-  })
+  const { data } = await instance.post<SharedTypes.Http.BaseApiResponse<SharedTypes.Http.AuthTokens>>(
+    '/auth/refresh',
+    {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    },
+  )
 
   LocalStorageClient.saveAuthTokens(data.data)
   SessionStorageClient.saveAuthTokens(data.data)

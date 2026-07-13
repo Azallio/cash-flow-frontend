@@ -1,14 +1,14 @@
 import { SharedApi, type SharedTypes } from '@shared'
-import type { TransactionsResponse } from '@shared/types/http'
+import type { TransactionsTypes } from '@widgets/transactions'
 
 export type DeleteTransactionParams = {
   id: string
 }
 
 export const deleteTransaction = async (params: DeleteTransactionParams) => {
-  const res = await SharedApi.baseClient.delete<SharedTypes.Http.BaseApiResponse<TransactionsResponse>>(
-    `/transactions/${params.id}`,
-  )
+  const res = await SharedApi.baseClient.delete<
+    SharedTypes.Http.BaseApiResponse<TransactionsTypes.Http.Transaction>
+  >(`/transactions/${params.id}`)
 
   return res.data.data
 }

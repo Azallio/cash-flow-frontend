@@ -1,5 +1,5 @@
 import type { DatesRangeValue } from '@mantine/dates'
-import { SharedLib, SharedUi } from '@shared'
+import { SharedLib, SharedService, SharedUi } from '@shared'
 import { BudgetUi } from '@widgets/budget'
 import { IncomeExpenseDynamicsChartUi } from '@widgets/income-expense-dynamics-chart'
 import { Layout } from '@widgets/layout/layout.component'
@@ -7,15 +7,17 @@ import { OverviewCardUi } from '@widgets/overview-card'
 import { useState } from 'react'
 
 export default function IndexRoute() {
-  const [isDatePickerModalOpen, setIsDatePickerModalOpen] = useState(false)
-  const [dateRange, setDateRange] = useState<DatesRangeValue<string> | string[] | string | null>([
-    new Date().toISOString(),
-    new Date().toISOString(),
-  ])
+  const { dateFrom, dateTo, setDate } = SharedService.Store.useDateStore()
 
-  const [tempDateRange, setTempDateRange] = useState<DatesRangeValue<string> | string[] | string | null>(
-    dateRange,
-  )
+  const IsoDateFrom = dateFrom.toISOString()
+  const IsoDateTo = dateTo.toISOString()
+
+  const [isDatePickerModalOpen, setIsDatePickerModalOpen] = useState(false)
+
+  const [tempDateRange, setTempDateRange] = useState<DatesRangeValue<string> | string[] | string | null>([
+    IsoDateFrom,
+    IsoDateTo,
+  ])
 
   return (
     <Layout>
@@ -30,20 +32,20 @@ export default function IndexRoute() {
         <SharedUi.Button
           variant="color:secondary size:md"
           onClick={() => {
-            setTempDateRange(dateRange)
+            setTempDateRange([IsoDateFrom, IsoDateTo])
             setIsDatePickerModalOpen(true)
           }}
         >
-          {dateRange![0] !== null && dateRange![1] !== null
-            ? `${SharedLib.Utils.formatDate(dateRange![0])} - ${SharedLib.Utils.formatDate(dateRange![1])}`
+          {IsoDateFrom !== null && IsoDateTo !== null
+            ? `${SharedLib.Utils.formatDate(IsoDateFrom)} - ${SharedLib.Utils.formatDate(IsoDateTo)}`
             : 'Выбрать период'}
         </SharedUi.Button>
       </div>
-      <OverviewCardUi.OverviewCard from={dateRange![0] ?? ''} to={dateRange![1] ?? ''} />
+      <OverviewCardUi.OverviewCard from={IsoDateFrom ?? ''} to={IsoDateTo ?? ''} />
       <div className="flex h-max gap-4">
         <IncomeExpenseDynamicsChartUi.IncomeExpenseDynamicsSparkline
-          from={dateRange![0] ?? ''}
-          to={dateRange![1] ?? ''}
+          from={IsoDateFrom ?? ''}
+          to={IsoDateTo ?? ''}
         />
         <div className="flex w-1/3 flex-col gap-4">
           <BudgetUi.MonthlyBudget />
@@ -61,7 +63,10 @@ export default function IndexRoute() {
           <SharedUi.Button
             variant="color:primary size:md"
             onClick={() => {
-              setDateRange(tempDateRange)
+              setDate(
+                tempDateRange![0] !== null ? new Date(tempDateRange![0]) : null,
+                tempDateRange![1] !== null ? new Date(tempDateRange![1]) : null,
+              )
               setIsDatePickerModalOpen(false)
             }}
           >

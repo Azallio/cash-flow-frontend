@@ -1,6 +1,6 @@
 import { SharedUi } from '@shared'
 import useInfinityScroll from '@shared/service/hook/use-infinity-scroll.hook'
-import type { TransactionsResponse } from '@shared/types/http'
+import type { Transaction } from '@shared/types/http'
 import { ContentBlock } from '@shared/ui/content-block'
 import { pluralize } from '@widgets/transactions/lib/utils'
 import { useCallback, useState } from 'react'
@@ -9,7 +9,7 @@ import { TransactionLoader } from './ui/transaction-loader.component'
 import { TransactionRemoveModal } from './ui/transaction-remove-modal.component'
 
 type Props = {
-  transactions: TransactionsResponse[]
+  transactions: Transaction[]
   categoryMap: Record<number, string>
   isLoading: boolean
   onDeleteTransaction: (id: string) => Promise<unknown>

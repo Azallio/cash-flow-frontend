@@ -1,10 +1,10 @@
-import type { CategoryResponse, TransactionsResponse } from '@shared/types/http'
+import type { CategoryResponse, Transaction } from '@shared/types/http'
 import { useQueries } from '@tanstack/react-query'
 import { getCategoryById } from '@widgets/transactions/api/method'
 import { useMemo } from 'react'
 
 type Params = {
-  transactions: TransactionsResponse[]
+  transactions: Transaction[]
   categories: CategoryResponse[]
 }
 
