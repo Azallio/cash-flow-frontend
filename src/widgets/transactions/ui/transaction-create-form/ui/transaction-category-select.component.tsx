@@ -3,7 +3,7 @@ import type { CategoryResponse } from '@shared/types/http'
 import type { useCreateTransactionForm } from '@widgets/transactions/model/create-transaction-model/use-create-transaction-form'
 import { Controller, type ControllerRenderProps } from 'react-hook-form'
 
-type Props = {
+interface Props {
   transactionForm: ReturnType<typeof useCreateTransactionForm>
   categoriesByTransactionType: CategoryResponse[]
   setIsCategoryModalOpened: (value: boolean) => void
@@ -50,7 +50,7 @@ export function TransactionCategorySelect({
 					searchable
 					clearable
           value={field.value ? String(field.value) : null}
-          onChange={(value) => changeValue(value, field)}
+          onChange={(value) => { changeValue(value, field); }}
           placeholder="Выберите категорию"
           data={[
             ...categoriesByTransactionType.map((item) => ({

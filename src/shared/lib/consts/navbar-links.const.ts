@@ -1,6 +1,6 @@
 import type { IconName } from '@shared/ui/icon/icon.component'
 
-type NavbarLink = {
+interface NavbarLink {
   label: string
   href: string
   disabled?: boolean

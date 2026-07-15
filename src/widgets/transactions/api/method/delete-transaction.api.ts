@@ -1,7 +1,7 @@
 import { SharedApi, type SharedTypes } from '@shared'
 import type { TransactionsTypes } from '@widgets/transactions'
 
-export type DeleteTransactionParams = {
+export interface DeleteTransactionParams {
   id: string
 }
 

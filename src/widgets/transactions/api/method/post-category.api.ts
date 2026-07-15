@@ -1,7 +1,7 @@
 import { SharedApi, type SharedTypes } from '@shared'
 import type { TransactionTypeEnum } from '@shared/lib/enums'
 
-export type CreateCategoryPayload = {
+export interface CreateCategoryPayload {
   title: string
   description?: string
   transactionType: TransactionTypeEnum

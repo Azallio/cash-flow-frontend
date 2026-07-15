@@ -1,6 +1,5 @@
 import { SharedApi, type SharedTypes } from '@shared'
-import type { TransactionTypeEnum } from '@shared/lib/enums'
-import type { TransactionsTypes } from '@widgets/transactions'
+import type { TransactionsLib, TransactionsTypes } from '@widgets/transactions'
 
 type RawTransactionsResponse = Omit<TransactionsTypes.Http.Transaction, 'categoryId'> & {
   categoryId?: number | null
@@ -14,10 +13,10 @@ type RawTransactionsResponse = Omit<TransactionsTypes.Http.Transaction, 'categor
 const resolveCategoryId = (item: RawTransactionsResponse) =>
   item.categoryId ?? item.categoryID ?? item.category_id ?? item.category?.id
 
-export type GetTransactionsParams = {
+export interface GetTransactionsParams {
   take: number
   skip: number
-  transactionType?: TransactionTypeEnum
+  transactionType?: TransactionsLib.Enums.TransactionTypeEnum
   startDate?: string
   endDate?: string
 }

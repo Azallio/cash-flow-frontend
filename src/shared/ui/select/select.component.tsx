@@ -1,12 +1,12 @@
-import { Select as MantineSelect, type SelectProps } from '@mantine/core'
+import { Select as MantineSelect, type SelectProps, type SelectStylesNames } from '@mantine/core'
 import { selectVariantClassNames } from '@shared/lib/consts/select-classname.const'
 
-type SelectOption = {
+interface SelectOption {
   value: string
   label: string
 }
 
-type Props = {
+interface Props {
   className?: string
   classNames?: SelectProps['classNames']
   data: SelectOption[]
@@ -21,9 +21,18 @@ type Props = {
   clearable?: boolean
 }
 
+type StaticClassNames = Partial<Record<SelectStylesNames, string | undefined>>
+
 export const Select = (props: Props) => {
   const { className, classNames, searchable, clearable, ...restProps } = props
 
+  const staticSelectVariantClassNames = selectVariantClassNames as StaticClassNames
+  const staticClassNames = classNames as StaticClassNames | undefined
+
+  const resolvedClassNames = {
+    ...staticSelectVariantClassNames,
+    ...staticClassNames,
+  }
   return (
     <MantineSelect
       checkIconPosition="right"
@@ -37,7 +46,7 @@ export const Select = (props: Props) => {
           timingFunction: 'ease',
         },
       }}
-      classNames={{ ...selectVariantClassNames, ...classNames }}
+      classNames={resolvedClassNames}
       {...restProps}
     />
   )

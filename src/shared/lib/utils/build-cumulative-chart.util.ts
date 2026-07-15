@@ -1,11 +1,15 @@
-import { TransactionTypeEnum } from '../enums'
+import type { TransactionsLib, TransactionsTypes } from '@widgets/transactions'
+import { TransactionTypeEnum } from '@widgets/transactions/lib/enums'
 
-type ChartPoint = {
+interface ChartPoint {
   date: string
   value: number
 }
 
-export function buildCumulativeChart(transactions: Transaction[], type?: TransactionTypeEnum): ChartPoint[] {
+export function buildCumulativeChart(
+  transactions: TransactionsTypes.Http.Transaction[],
+  type?: TransactionsLib.Enums.TransactionTypeEnum,
+): ChartPoint[] {
   const grouped = new Map<string, number>()
 
   for (const t of transactions) {

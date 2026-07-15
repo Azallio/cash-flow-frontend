@@ -1,16 +1,17 @@
 import { SharedLib, type SharedTypes } from '@shared'
 import React from 'react'
 import { Area, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
+
 import { SparklineTooltip } from './sparkline-tooltip.component'
 
-type SparkLineDate<T> = {
-  date: string extends string | number | Date ? string : never
+interface SparkLineDate<T> {
+  date: string
   value: T
 }
 
 type SparklineType = 'single' | 'multi'
 
-type AccentedValues = {
+interface AccentedValues {
   name: string
   color: string
 }
@@ -23,11 +24,11 @@ type SparklineProps<T, Type extends SparklineType> = SharedTypes.Ui.PropsWithCla
 
 const useGetGradientIds = (count: number) => {
   const ids = React.useId()
-  return Array.from({ length: count }, (_, index) => `sparkline-gradient-${ids}-${index}`)
+  return Array.from({ length: count }, (_, index) => `sparkline-gradient-${ids}-${index.toString()}`)
 }
 
 export const Sparkline = <T, Type extends SparklineType>(props: SparklineProps<T, Type>) => {
-  const { className, data, color, accentedValues = [], ...restProps } = props
+  const { className, data, color, accentedValues, ...restProps } = props
   const chartData = data.map((item) => ({
     date: item.date,
     ...(typeof item.value === 'object' ? item.value : { value: item.value }),
@@ -54,14 +55,16 @@ export const Sparkline = <T, Type extends SparklineType>(props: SparklineProps<T
             axisLine={false}
             interval="preserveStartEnd" //
             tickFormatter={(value) => {
-              return SharedLib.Utils.formatDate(value)
+              return SharedLib.Utils.formatDate(value as string)
             }}
           />
           <Tooltip
             cursor={false}
             content={({ active, payload }) => {
-              const point = payload?.[0]?.payload
-              if (!active || !point) return null
+              if (!active || !payload.length) return null
+
+              const point = payload[0].payload as T & { date: string }
+
               return (
                 <SparklineTooltip
                   point={point}

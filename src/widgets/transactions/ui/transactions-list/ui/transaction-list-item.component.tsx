@@ -1,13 +1,13 @@
 import { SharedLib, SharedUi } from '@shared'
-import { TransactionTypeEnum } from '@shared/lib/enums'
+import { TransactionsLib } from '@widgets/transactions'
 import clsx from 'clsx'
 
-type TransactionListItemProps = {
+interface TransactionListItemProps {
   item: {
     id: number
     description: string
     categoryId: number
-    transactionType: TransactionTypeEnum
+    transactionType: TransactionsLib.Enums.TransactionTypeEnum
     amount: number
     createdAt: string
   }
@@ -22,7 +22,7 @@ export function TransactionListItem(props: TransactionListItemProps) {
   const { item, index, isLast, lastElementRef, categoryMap, setDeleteTransactionId } = props
   return (
     <div
-      key={item.id + item.createdAt + index}
+      key={item.id.toString() + item.createdAt + index.toString()}
       ref={isLast ? lastElementRef : undefined}
       className="border-border group flex flex-col gap-2 rounded-xl border px-4 py-3 md:flex-row md:items-center md:justify-between"
     >
@@ -31,7 +31,7 @@ export function TransactionListItem(props: TransactionListItemProps) {
         <p className="font-medium">{item.description}</p>
         <p className="text-text-muted text-sm">
           {item.categoryId > 0
-            ? (categoryMap[item.categoryId] ?? `Категория #${item.categoryId}`)
+            ? (categoryMap[item.categoryId] ?? `Категория #${item.categoryId.toString()}`)
             : 'Без категории'}
         </p>
       </div>
@@ -40,7 +40,9 @@ export function TransactionListItem(props: TransactionListItemProps) {
           aria-label="Удалить транзакцию"
           className="invisible transition-all duration-200 group-hover:visible"
           variant="color:secondary size:sm"
-          onClick={() => setDeleteTransactionId(item.id)}
+          onClick={() => {
+            setDeleteTransactionId(item.id)
+          }}
         >
           <SharedUi.Icon name="trash" className="h-4 w-4" />
         </SharedUi.Button>
@@ -49,10 +51,12 @@ export function TransactionListItem(props: TransactionListItemProps) {
           <span
             className={clsx(
               'font-semibold',
-              item.transactionType === TransactionTypeEnum.INCOME ? 'text-success' : 'text-primary',
+              item.transactionType === TransactionsLib.Enums.TransactionTypeEnum.INCOME
+                ? 'text-success'
+                : 'text-primary',
             )}
           >
-            {item.transactionType === TransactionTypeEnum.INCOME ? '+' : '-'}
+            {item.transactionType === TransactionsLib.Enums.TransactionTypeEnum.INCOME ? '+' : '-'}
             {SharedLib.Utils.formatMoney(item.amount)}
           </span>
           <span className="text-text-muted">{SharedLib.Utils.formatDate(item.createdAt)}</span>

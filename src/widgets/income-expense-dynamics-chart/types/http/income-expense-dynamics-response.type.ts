@@ -1,4 +1,4 @@
-type Point = {
+interface Point {
   bucket: string
   income: number
   expense: number

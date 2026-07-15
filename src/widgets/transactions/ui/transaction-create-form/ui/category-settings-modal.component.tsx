@@ -5,7 +5,7 @@ import { useDeleteCategoryMutation } from '@widgets/transactions/service/mutatio
 import { useCategoriesQuery } from '@widgets/transactions/service/query'
 import { useCallback } from 'react'
 
-type Props = {
+interface Props {
   opened: boolean
   onClose: () => void
 }
@@ -15,15 +15,15 @@ export function CategorySettingsModal(props: Props) {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useCategoriesQuery({ take: 10, skip: 0 })
 
-  const handleLoadMore = useCallback(() => {
+  const handleLoadMore = useCallback(async () => {
     if (!isFetchingNextPage && hasNextPage) {
-      fetchNextPage()
+      await fetchNextPage()
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
-  const lastElementRef = useInfinityScroll(handleLoadMore)
+  const lastElementRef = useInfinityScroll(() => void handleLoadMore())
 
-  const categories = data?.pages.flatMap((page) => page.items) || []
+  const categories = data?.pages.flatMap((page) => page.items) ?? []
 
   const { mutate: deleteCategory } = useDeleteCategoryMutation()
 
@@ -42,7 +42,9 @@ export function CategorySettingsModal(props: Props) {
               <SharedUi.Button
                 aria-label="Удалить категорию"
                 variant="color:secondary size:sm"
-                onClick={() => deleteCategory(category.id)}
+                onClick={() => {
+                  deleteCategory(category.id)
+                }}
               >
                 <SharedUi.Icon name="trash" className="h-4 w-4" />
               </SharedUi.Button>

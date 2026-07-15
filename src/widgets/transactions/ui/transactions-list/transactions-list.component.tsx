@@ -1,80 +1,87 @@
-import { SharedUi } from '@shared'
-import useInfinityScroll from '@shared/service/hook/use-infinity-scroll.hook'
-import type { Transaction } from '@shared/types/http'
-import { ContentBlock } from '@shared/ui/content-block'
-import { pluralize } from '@widgets/transactions/lib/utils'
-import { useCallback, useState } from 'react'
-import { TransactionListItem } from './ui/transaction-list-item.component'
-import { TransactionLoader } from './ui/transaction-loader.component'
-import { TransactionRemoveModal } from './ui/transaction-remove-modal.component'
+import { SharedService, SharedUi } from '@shared'
+import { TransactionsService, TransactionsUtils } from '@widgets/transactions'
+import { filterTransactions } from '@widgets/transactions/lib/utils'
+import { useTransactionsFilterStore } from '@widgets/transactions/service/store'
+import { useCallback, useMemo, useState } from 'react'
 
-type Props = {
-  transactions: Transaction[]
-  categoryMap: Record<number, string>
-  isLoading: boolean
-  onDeleteTransaction: (id: string) => Promise<unknown>
-  isDeleteTransactionPending: boolean
-  onLoadMore: () => void
-  hasMore: boolean
-  isLoadingMore: boolean
-}
+import { TransactionListItem, TransactionLoader, TransactionRemoveModal } from './ui'
 
-export const TransactionsList = (props: Props) => {
-  const {
-    transactions,
-    categoryMap,
-    isLoading,
-    onDeleteTransaction,
-    isDeleteTransactionPending,
-    onLoadMore,
-    hasMore,
-    isLoadingMore,
-  } = props
+export const TransactionsList = () => {
+  const { typeFilter, search } = useTransactionsFilterStore()
+  const { dateFrom, dateTo } = SharedService.Store.useDateStore()
+
+  const queryType = typeFilter === 'ALL' ? undefined : typeFilter
+
+  const transactionsQuery = TransactionsService.Query.useTransactionsInfiniteQuery({
+    transactionType: queryType,
+    startDate: dateFrom.toISOString(),
+    endDate: dateTo.toISOString(),
+  })
+
+  const categoriesQuery = TransactionsService.Query.useCategoriesQuery({ take: 100, skip: 0 })
+
+  const deleteTransaction = TransactionsService.Mutation.useDeleteTransactionMutation()
+
+  const transactions = useMemo(
+    () => transactionsQuery.data?.pages.flatMap((p) => p.items) ?? [],
+    [transactionsQuery.data],
+  )
+
+  const categories = useMemo(
+    () => categoriesQuery.data?.pages.flatMap((p) => p.items) ?? [],
+    [categoriesQuery.data],
+  )
+
+  const resolved = TransactionsService.Query.useResolvedCategoryMapQuery({ transactions, categories })
+
+  const filtered = useMemo(
+    () => filterTransactions({ transactions, search, categoryMap: resolved.resolvedCategoryMap }),
+    [transactions, search, resolved.resolvedCategoryMap],
+  )
+
+  const isLoading =
+    transactionsQuery.isLoading || categoriesQuery.isLoading || resolved.isMissingCategoriesLoading
+
   const [deleteTransactionId, setDeleteTransactionId] = useState<number | null>(null)
 
-  console.table(transactions)
-
   const handleDeleteTransaction = async () => {
-    if (!deleteTransactionId) {
-      return
-    }
-
-    await onDeleteTransaction(String(deleteTransactionId))
+    if (!deleteTransactionId) return
+    await deleteTransaction.mutateAsync(String(deleteTransactionId))
     setDeleteTransactionId(null)
   }
 
   const handleLoadMore = useCallback(() => {
-    if (!isLoadingMore && hasMore) {
-      onLoadMore()
+    if (!transactionsQuery.isFetchingNextPage && transactionsQuery.hasNextPage) {
+      void transactionsQuery.fetchNextPage()
     }
-  }, [onLoadMore, hasMore, isLoadingMore])
+  }, [transactionsQuery])
 
-  const lastElementRef = useInfinityScroll(handleLoadMore)
+  const lastElementRef = SharedService.Hooks.useInfinityScroll(handleLoadMore)
 
   return (
-    <ContentBlock className="border-border h-full overflow-scroll border">
+    <SharedUi.ContentBlock className="border-border h-full overflow-scroll border">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Последние транзакции </h2>
+        <h2>Последние транзакции </h2>
         <span className="text-text-muted text-sm">
-          {transactions.length} {pluralize(transactions.length, 'запись ', 'записи ', 'записей  ')}
+          {filtered.length} {TransactionsUtils.pluralize(filtered.length, 'запись ', 'записи ', 'записей  ')}
         </span>
       </div>
 
       <div className="flex flex-col gap-2">
         {isLoading && [1, 2, 3].map((index) => <TransactionLoader key={index} />)}
 
-        {!isLoading && !transactions.length && <SharedUi.NotFoundMessage title="Транзакции не найдены" />}
+        {!isLoading && !filtered.length && <SharedUi.NotFoundMessage title="Транзакции не найдены" />}
 
-        {transactions.map((item, index) => {
-          const isLast = index === transactions.length - 1
+        {filtered.map((item, index) => {
+          const isLast = index === filtered.length - 1
           return (
             <TransactionListItem
-              key={item.id + item.createdAt + index}
+              key={item.id.toString() + item.createdAt + index.toString()}
               item={item}
               index={index}
               isLast={isLast}
               lastElementRef={isLast ? lastElementRef : undefined}
-              categoryMap={categoryMap}
+              categoryMap={resolved.resolvedCategoryMap}
               setDeleteTransactionId={setDeleteTransactionId}
             />
           )
@@ -83,11 +90,13 @@ export const TransactionsList = (props: Props) => {
 
       <TransactionRemoveModal
         isOpen={deleteTransactionId !== null}
-        onClose={() => setDeleteTransactionId(null)}
-        isDeleteTransactionPending={isDeleteTransactionPending}
-        handleDeleteTransaction={handleDeleteTransaction}
+        onClose={() => {
+          setDeleteTransactionId(null)
+        }}
+        isDeleteTransactionPending={deleteTransaction.isPending}
+        handleDeleteTransaction={() => void handleDeleteTransaction()}
         setDeleteTransactionId={setDeleteTransactionId}
       />
-    </ContentBlock>
+    </SharedUi.ContentBlock>
   )
 }

@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import type { LoginRequest } from '@units/user/type'
+import type { AuthTypes } from '@widgets/auth'
 import { postAuthRegister } from '@widgets/auth/api/method'
 
 export const useAuthRegisterMutation = () =>
   useMutation({
     mutationKey: ['auth-register'],
-    mutationFn: (payload: LoginRequest) => postAuthRegister(payload),
+    mutationFn: (payload: AuthTypes.Http.AuthLoginRequest) => postAuthRegister(payload),
   })

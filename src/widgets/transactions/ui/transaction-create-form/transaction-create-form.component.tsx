@@ -1,8 +1,8 @@
 import { SharedLib, SharedUi } from '@shared'
-import type { CategoryResponse } from '@shared/types/http'
-import type { CreateCategoryPayload, CreateTransactionPayload } from '@widgets/transactions/api/method'
+import { TransactionsLib, TransactionsService } from '@widgets/transactions'
 import { useCreateCategoryForm, useCreateTransactionForm } from '@widgets/transactions/model'
 import { useMemo, useState } from 'react'
+
 import {
   CategoryCreateModal,
   CategorySettingsModal,
@@ -10,27 +10,20 @@ import {
   TransactionTypeToggleButton,
 } from './ui'
 
-type Props = {
-  categories: CategoryResponse[]
-  onCreateCategory: (payload: CreateCategoryPayload) => Promise<CategoryResponse>
-  onCreateTransaction: (payload: CreateTransactionPayload) => Promise<unknown>
-  isCreateCategoryPending: boolean
-  isCreateTransactionPending: boolean
-}
-
 const AddNewCategoryOptionValue = '__add-new-category__'
 
-export const TransactionCreateForm = (props: Props) => {
-  const {
-    categories,
-    onCreateCategory,
-    onCreateTransaction,
-    isCreateCategoryPending,
-    isCreateTransactionPending,
-  } = props
+export const TransactionCreateForm = () => {
+  const categoriesQuery = TransactionsService.Query.useCategoriesQuery({ take: 100, skip: 0 })
+  const createCategory = TransactionsService.Mutation.useCreateCategoryMutation()
+  const createTransaction = TransactionsService.Mutation.useCreateTransactionMutation()
 
-  const [transactionType, setTransactionType] = useState<SharedLib.Enums.TransactionTypeEnum>(
-    SharedLib.Enums.TransactionTypeEnum.INCOME,
+  const categories = useMemo(
+    () => categoriesQuery.data?.pages.flatMap((page) => page.items) ?? [],
+    [categoriesQuery.data],
+  )
+
+  const [transactionType, setTransactionType] = useState<TransactionsLib.Enums.TransactionTypeEnum>(
+    TransactionsLib.Enums.TransactionTypeEnum.INCOME,
   )
 
   const [isCategoryModalOpened, setIsCategoryModalOpened] = useState(false)
@@ -43,24 +36,23 @@ export const TransactionCreateForm = (props: Props) => {
 
   const categoryForm = useCreateCategoryForm({
     transactionType,
-    onCreateCategory,
+    onCreateCategory: (p) => createCategory.mutateAsync(p),
     onSuccess: (category) => {
       transactionForm.form.setValue('categoryId', category.id)
-
       setIsCategoryModalOpened(false)
     },
   })
 
   const transactionForm = useCreateTransactionForm({
     transactionType,
-    onCreateTransaction,
+    onCreateTransaction: (p) => createTransaction.mutateAsync(p),
   })
 
   return (
     <SharedUi.ContentBlock className="border-border h-full w-full flex-1 border">
-      <h2 className="mb-4 text-xl font-semibold">Новая транзакция</h2>
+      <h2 className="mb-4">Новая транзакция</h2>
 
-      <form className="flex flex-col gap-3" onSubmit={transactionForm.submit}>
+      <form className="flex flex-col gap-3" onSubmit={() => void transactionForm.submit()}>
         <div className="border-border grid grid-cols-2 gap-2 rounded-xl border p-1">
           {SharedLib.Consts.TransactionTypeToggleOptions.map((item) => (
             <TransactionTypeToggleButton
@@ -103,25 +95,29 @@ export const TransactionCreateForm = (props: Props) => {
         <SharedUi.Button
           type="button"
           variant="color:secondary size:md"
-          onClick={() => setIsCategorySettingsModalOpened(true)}
+          onClick={() => {
+            setIsCategorySettingsModalOpened(true)
+          }}
         >
           Настройки категорий
         </SharedUi.Button>
 
-        <SharedUi.Button type="submit" variant="color:primary size:md" disabled={isCreateTransactionPending}>
-          {isCreateTransactionPending ? 'Сохранение...' : 'Добавить транзакцию'}
+        <SharedUi.Button type="submit" variant="color:primary size:md" disabled={createTransaction.isPending}>
+          {createTransaction.isPending ? 'Сохранение...' : 'Добавить транзакцию'}
         </SharedUi.Button>
       </form>
       <CategoryCreateModal
         isCategoryModalOpened={isCategoryModalOpened}
         setIsCategoryModalOpened={setIsCategoryModalOpened}
         categoryForm={categoryForm}
-        isCreateCategoryPending={isCreateCategoryPending}
+        isCreateCategoryPending={createCategory.isPending}
       />
 
       <CategorySettingsModal
         opened={isCategorySettingsModalOpened}
-        onClose={() => setIsCategorySettingsModalOpened(false)}
+        onClose={() => {
+          setIsCategorySettingsModalOpened(false)
+        }}
       />
     </SharedUi.ContentBlock>
   )

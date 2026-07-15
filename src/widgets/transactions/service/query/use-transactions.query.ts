@@ -1,9 +1,9 @@
-import type { TransactionTypeEnum } from '@shared/lib/enums'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import type { TransactionsLib } from '@widgets/transactions'
 import { getTransactions } from '@widgets/transactions/api/method'
 
-type Params = {
-  transactionType?: TransactionTypeEnum
+interface Params {
+  transactionType?: TransactionsLib.Enums.TransactionTypeEnum
   startDate?: string
   endDate?: string
 }
@@ -14,7 +14,7 @@ export const useTransactionsInfiniteQuery = (params: Params) => {
 
     initialPageParam: 0,
 
-    queryFn: ({ pageParam = 0 }) =>
+    queryFn: ({ pageParam }) =>
       getTransactions({
         take: 10,
         skip: pageParam,

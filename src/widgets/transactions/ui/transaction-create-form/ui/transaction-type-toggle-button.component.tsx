@@ -1,13 +1,14 @@
 import { SharedUi } from '@shared'
 import type { Consts } from '@shared/lib'
-import { TransactionTypeEnum } from '@shared/lib/enums'
+import type { TransactionsLib } from '@widgets/transactions'
+import { TransactionTypeEnum } from '@widgets/transactions/lib/enums'
 import type { useCreateTransactionForm } from '@widgets/transactions/model/create-transaction-model/use-create-transaction-form'
 import clsx from 'clsx'
 
-type Props = {
+interface Props {
   item: (typeof Consts.TransactionTypeToggleOptions)[number]
-  transactionType: TransactionTypeEnum
-  setTransactionType: (type: TransactionTypeEnum) => void
+  transactionType: TransactionsLib.Enums.TransactionTypeEnum
+  setTransactionType: (type: TransactionsLib.Enums.TransactionTypeEnum) => void
   transactionForm: ReturnType<typeof useCreateTransactionForm>
 }
 

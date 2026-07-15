@@ -1,7 +1,6 @@
 import { SharedUi, type SharedTypes } from '@shared'
 import { useTheme } from '@shared/service/hook/use-theme.hook'
 import clsx from 'clsx'
-import { Icon } from '../icon/icon.component'
 
 type Props = SharedTypes.Ui.PropsWithClassName
 
@@ -19,7 +18,7 @@ export const ThemeToggle = (props: Props) => {
       )}
       {...restProps}
     >
-      <Icon name={mode === 'light' ? 'moon' : 'sun'} className="size-6" />
+      <SharedUi.Icon name={mode === 'light' ? 'moon' : 'sun'} className="size-6" />
     </SharedUi.Button>
   )
 }

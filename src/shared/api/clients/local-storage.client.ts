@@ -1,4 +1,5 @@
 import type { Http } from '@shared/types'
+
 import { CookieClient } from './cookie.client'
 
 type StorageKey = 'AuthToken'
@@ -44,7 +45,7 @@ const saveTokens = (key: StorageKey, authTokens: Http.AuthTokens) => {
 
 export const LocalStorageClient = {
   getAuthTokens: () => getTokens('AuthToken'),
-  saveAuthTokens: (authTokens: Http.AuthTokens) => saveTokens('AuthToken', authTokens),
+  saveAuthTokens: (authTokens: Http.AuthTokens) => { saveTokens('AuthToken', authTokens); },
   clear: () => {
     localStorage.removeItem('AuthToken')
     CookieClient.clearRefreshToken()

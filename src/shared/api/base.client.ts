@@ -1,5 +1,6 @@
 import { SharedLib, type SharedTypes } from '@shared'
 import axios from 'axios'
+
 import { LocalStorageClient } from './clients/local-storage.client'
 import { mutexClient } from './clients/mutex.client'
 import { SessionStorageClient } from './clients/session-storage.client'
@@ -49,7 +50,7 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use(undefined, async (error) => {
   if (!axios.isAxiosError(error) || error.response?.status !== axios.HttpStatusCode.Unauthorized) {
-    return Promise.reject(error)
+    return Promise.reject(error instanceof Error ? error : new Error(String(error)))
   }
 
   if (mutexClient.isLocked()) {
@@ -65,13 +66,13 @@ instance.interceptors.response.use(undefined, async (error) => {
   try {
     await refreshTokens()
 
-    return instance.request({
+    return await instance.request({
       ...error.config,
     })
-  } catch (e) {
+  } catch (error) {
     clearUserAuth()
 
-    return Promise.reject(e)
+    return await Promise.reject(error instanceof Error ? error : new Error(String(error)))
   } finally {
     release()
   }

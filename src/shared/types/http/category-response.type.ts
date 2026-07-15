@@ -1,10 +1,12 @@
-import type { TransactionTypeEnum } from '@shared/lib/enums'
+import type { TransactionsLib } from '@widgets/transactions'
 
-export type CategoryResponse = {
+export interface CategoryResponse {
   id: number
   title: string
   description: string
-  transactionType: TransactionTypeEnum.INCOME | TransactionTypeEnum.EXPENSE
+  transactionType:
+    | TransactionsLib.Enums.TransactionTypeEnum.INCOME
+    | TransactionsLib.Enums.TransactionTypeEnum.EXPENSE
   createdAt: string
   updatedAt: string
 }

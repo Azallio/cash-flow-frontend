@@ -1,13 +1,13 @@
 import { SharedApi, type SharedTypes } from '@shared'
 
-export type GetCategoryByIdParams = {
+export interface GetCategoryByIdParams {
   id: number
 }
 
 export const getCategoryById = async (params: GetCategoryByIdParams) => {
   const res = await SharedApi.baseClient.get<
     SharedTypes.Http.BaseApiResponse<SharedTypes.Http.CategoryResponse>
-  >(`/category/${params.id}`)
+  >(`/category/${params.id.toString()}`)
 
   return res.data.data
 }

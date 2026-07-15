@@ -1,7 +1,7 @@
 import { SharedApi, type SharedTypes } from '@shared'
 import type { IncomeExpenseDynamicsChartTypes } from '@widgets/income-expense-dynamics-chart'
 
-export type Payload = {
+export interface Payload {
   from: string
   to: string
   granularity: 'day' | 'week' | 'month'

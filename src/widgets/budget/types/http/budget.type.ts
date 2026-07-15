@@ -1,4 +1,4 @@
-export type Budget = {
+export interface Budget {
   title: string
   targetAmount: number
   collectedAmount: number

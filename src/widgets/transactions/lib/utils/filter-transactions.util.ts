@@ -1,6 +1,6 @@
 import type { TransactionsTypes } from '@widgets/transactions'
 
-type Params = {
+interface Params {
   transactions: TransactionsTypes.Http.Transaction[]
   search: string
   categoryMap: Record<number, string>

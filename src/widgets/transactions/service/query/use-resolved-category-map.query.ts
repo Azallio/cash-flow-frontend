@@ -1,11 +1,11 @@
-import type { CategoryResponse, Transaction } from '@shared/types/http'
+import type { SharedTypes } from '@shared'
 import { useQueries } from '@tanstack/react-query'
-import { getCategoryById } from '@widgets/transactions/api/method'
+import { type TransactionsTypes, TransactionsApi } from '@widgets/transactions'
 import { useMemo } from 'react'
 
-type Params = {
-  transactions: Transaction[]
-  categories: CategoryResponse[]
+interface Params {
+  transactions: TransactionsTypes.Http.Transaction[]
+  categories: SharedTypes.Http.CategoryResponse[]
 }
 
 export const useResolvedCategoryMapQuery = (params: Params) => {
@@ -39,7 +39,7 @@ export const useResolvedCategoryMapQuery = (params: Params) => {
   const missingCategoryQueries = useQueries({
     queries: missingCategoryIds.map((id) => ({
       queryKey: ['category', id],
-      queryFn: () => getCategoryById({ id }),
+      queryFn: () => TransactionsApi.Methods.getCategoryById({ id }),
       enabled: !!id,
       staleTime: 1000 * 60 * 5,
       retry: false,

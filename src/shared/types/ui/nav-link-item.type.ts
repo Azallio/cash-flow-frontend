@@ -1,6 +1,6 @@
 import type { To } from 'react-router'
 
-export type NavLinkItem = {
+export interface NavLinkItem {
   to: To
   label: string
 }

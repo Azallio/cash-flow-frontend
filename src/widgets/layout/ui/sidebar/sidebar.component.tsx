@@ -7,11 +7,11 @@ export const Sidebar = (props: Props) => {
   const { className, ...restProps } = props
 
   return (
-    <div className={clsx(className, 'flex justify-between')} {...restProps}>
-      <div className="bg-surface flex h-screen flex-col gap-4 px-4 py-4">
+    <div className={clsx(className, 'flex justify-between w-1/5 not-md:hidden')} {...restProps}>
+      <div className="bg-surface flex flex-col gap-4 px-4 py-4 w-full">
         <SharedUi.Link to="/" className="flex items-center gap-2">
           <SharedUi.Icon name="favicon" className="size-8" />
-          <h1 className="text-3xl font-semibold whitespace-nowrap">Cash Flow</h1>
+          <h1 className="whitespace-nowrap">Cash Flow</h1>
         </SharedUi.Link>
 
         <SharedUi.Navbar className="flex gap-6" />

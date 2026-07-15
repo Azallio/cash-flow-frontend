@@ -23,9 +23,9 @@ export function Icon(props: IconProps) {
 
   const Icon = Icons[name] as React.FC<React.SVGProps<SVGSVGElement>>
 
-  return Icon ? (
+  return (
     <Suspense fallback={null}>
       <Icon role="img" {...restProps} />
     </Suspense>
-  ) : null
+  )
 }

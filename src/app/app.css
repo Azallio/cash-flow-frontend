@@ -49,9 +49,6 @@ body {
 }
 
 @theme {
-
-	
-
   --font-sf-pro: 'SF Pro Display', ui-sans-serif, system-ui, sans-serif;
 
   --color-bg: var(--bg);
@@ -67,6 +64,29 @@ body {
   --color-success: var(--success);
   --color-info: var(--info);
   --color-accent: var(--accent);
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sf-pro);
+  }
+
+  h1 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    line-height: 2.5rem;
+  }
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 2rem;
+  }
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.75rem;
+  }
 }
 
 body {

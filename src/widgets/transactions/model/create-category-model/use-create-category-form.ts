@@ -1,13 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import type { SharedTypes } from '@shared'
+import type { TransactionsApi, TransactionsLib } from '@widgets/transactions'
 import { useForm } from 'react-hook-form'
-
-import type { SharedLib, SharedTypes } from '@shared'
-import type { TransactionsApi } from '@widgets/transactions'
 
 import { createCategorySchema, type CreateCategoryFormValues } from './create-category.schema'
 
-type Params = {
-  transactionType: SharedLib.Enums.TransactionTypeEnum
+interface Params {
+  transactionType: TransactionsLib.Enums.TransactionTypeEnum
   onCreateCategory: (
     payload: TransactionsApi.Methods.CreateCategoryPayload,
   ) => Promise<SharedTypes.Http.CategoryResponse>

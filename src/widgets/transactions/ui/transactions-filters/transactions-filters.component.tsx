@@ -1,40 +1,45 @@
 import type { DatesRangeValue } from '@mantine/dates'
-import { SharedLib, SharedService, SharedUi } from '@shared'
+import { SharedLib, SharedService, SharedUi, type SharedTypes } from '@shared'
 import { Consts } from '@shared/lib'
 import {
   TransactionFilterInputFields,
   type TransactionFilterType,
 } from '@shared/lib/consts/transactions-page.const'
+import { useTransactionsFilterStore } from '@widgets/transactions/service/store'
+import clsx from 'clsx'
 import { useState } from 'react'
 
-type FilterValues = {
-  search: string
-  startDate: string
-  endDate: string
-}
-
-type Props = {
-  typeFilter: TransactionFilterType
-  filterValues: FilterValues
-  onTypeFilterChange: (value: TransactionFilterType) => void
-  onFilterChange: (key: keyof FilterValues, value: string) => void
-  onDateRangeChange: (start: string, end: string) => void
-  onReset: () => void
-}
+type Props = SharedTypes.Ui.PropsWithClassName
 
 export const TransactionsFilters = (props: Props) => {
-  const { typeFilter, filterValues, onTypeFilterChange, onFilterChange, onDateRangeChange, onReset } = props
-
-  const { dateFrom, dateTo } = SharedService.Store.useDateStore()
+  const { className, ...restProps } = props
+  const { typeFilter, search, setTypeFilter, setSearch, reset } = useTransactionsFilterStore()
+  const { dateFrom, dateTo, setDate } = SharedService.Store.useDateStore()
 
   const [isDatePickerModalOpen, setIsDatePickerModalOpen] = useState(false)
-  const [tempDateRange, setTempDateRange] = useState<DatesRangeValue<string> | string[] | string | null>([
+  const [tempDateRange, setTempDateRange] = useState<DatesRangeValue<string>>([
     dateFrom.toISOString().split('T')[0],
     dateTo.toISOString().split('T')[0],
   ])
 
+  const handleDateChange = (newDateRange: DatesRangeValue<string>) => {
+    const [newFrom, newTo] = newDateRange
+    if (newFrom && newTo) {
+      setDate(new Date(newFrom), new Date(newTo))
+    }
+    setIsDatePickerModalOpen(false)
+  }
+
+  const handleReset = () => {
+    reset()
+    setDate(
+      new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+      new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
+    )
+  }
+
   return (
-    <SharedUi.ContentBlock className="border-border border">
+    <SharedUi.ContentBlock className={clsx('border-border border', className)} {...restProps}>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-4">
         <SharedUi.Select
           value={typeFilter}
@@ -44,7 +49,7 @@ export const TransactionsFilters = (props: Props) => {
           }))}
           onChange={(value) => {
             if (value) {
-              onTypeFilterChange(value as TransactionFilterType)
+              setTypeFilter(value as TransactionFilterType)
             }
           }}
           allowDeselect={false}
@@ -54,8 +59,10 @@ export const TransactionsFilters = (props: Props) => {
           key={TransactionFilterInputFields[0].key}
           type={TransactionFilterInputFields[0].type}
           placeholder={TransactionFilterInputFields[0].placeholder}
-          value={filterValues[TransactionFilterInputFields[0].key]}
-          onChange={(event) => onFilterChange(TransactionFilterInputFields[0].key, event.target.value)}
+          value={search}
+          onChange={(event) => {
+            setSearch(event.target.value)
+          }}
         />
 
         <SharedUi.Button
@@ -66,12 +73,10 @@ export const TransactionsFilters = (props: Props) => {
             setIsDatePickerModalOpen(true)
           }}
         >
-          {dateFrom !== null && dateTo !== null
-            ? `${SharedLib.Utils.formatDate(dateFrom.toDateString())} - ${SharedLib.Utils.formatDate(dateTo.toDateString())}`
-            : 'Выбрать период'}
+          {`${SharedLib.Utils.formatDate(dateFrom.toDateString())} - ${SharedLib.Utils.formatDate(dateTo.toDateString())}`}
         </SharedUi.Button>
 
-        <SharedUi.Button variant="color:secondary size:md" onClick={onReset}>
+        <SharedUi.Button variant="color:secondary size:md" onClick={handleReset}>
           Сбросить
         </SharedUi.Button>
       </div>
@@ -79,17 +84,16 @@ export const TransactionsFilters = (props: Props) => {
       <SharedUi.Modal
         title="Выберите период"
         opened={isDatePickerModalOpen}
-        onClose={() => setIsDatePickerModalOpen(false)}
+        onClose={() => {
+          setIsDatePickerModalOpen(false)
+        }}
       >
         <div className="flex flex-col gap-4">
-          <SharedUi.DatePicker type="range" size="xl" value={tempDateRange} onChange={setTempDateRange} />
+          <SharedUi.DatePicker<'range'> value={tempDateRange} onChange={setTempDateRange} />
           <SharedUi.Button
             variant="color:primary size:md"
             onClick={() => {
-              const start = tempDateRange![0] !== null ? tempDateRange![0] : ''
-              const end = tempDateRange![1] !== null ? tempDateRange![1] : ''
-              onDateRangeChange(start, end)
-              setIsDatePickerModalOpen(false)
+              handleDateChange(tempDateRange)
             }}
           >
             Применить

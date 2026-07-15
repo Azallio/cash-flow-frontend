@@ -3,6 +3,7 @@ import { formatMoney } from '@shared/lib/utils'
 import { IncomeExpenseDynamicsChartService } from '@widgets/income-expense-dynamics-chart'
 import clsx from 'clsx'
 import { useMemo } from 'react'
+
 import { OverviewCardService } from '..'
 import { ChangePercent } from './overview-card-profit-text.component'
 
@@ -33,7 +34,7 @@ function normalizeDynamics(
   return (
     dynamicsData?.map((item) => ({
       date: new Date(item.bucket).toISOString(),
-      value: item[field] || 0,
+      value: item[field] ?? 0,
     })) ?? []
   )
 }
@@ -82,11 +83,11 @@ export function OverviewCard(props: Props) {
           <SharedUi.ContentBlock key={item.title} className="w-1/3">
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between gap-4">
-                <h2 className="text-xl font-semibold">{item.title}</h2>
+                <h2>{item.title}</h2>
                 <ChangePercent value={item.changePercent} inverted={item.inverted} />
               </div>
 
-              <p className="text-2xl">{item.value !== undefined ? formatMoney(item.value) : '-'}</p>
+              <p className="text-2xl">{item.value ? formatMoney(item.value) : '-'}</p>
 
               <SharedUi.Sparkline<number, 'single'>
                 accentedValues={[{ name: 'value', color: item.color }]}

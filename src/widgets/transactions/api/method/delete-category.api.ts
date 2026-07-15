@@ -1,10 +1,10 @@
 import { SharedApi, type SharedTypes } from '@shared'
 
-export type DeleteCategoryParams = {
+export interface DeleteCategoryParams {
   id: number
 }
 
-type DeleteCategoryResponse = {
+interface DeleteCategoryResponse {
   status: number
   data: null
   error: null
@@ -12,7 +12,7 @@ type DeleteCategoryResponse = {
 
 export const deleteCategory = async (params: DeleteCategoryParams) => {
   const res = await SharedApi.baseClient.delete<SharedTypes.Http.BaseApiResponse<DeleteCategoryResponse>>(
-    `/category/${params.id}`,
+    `/category/${params.id.toString()}`,
   )
 
   return res.data.data

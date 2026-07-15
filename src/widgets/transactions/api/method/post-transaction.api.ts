@@ -1,7 +1,7 @@
-import { SharedApi, SharedLib, type SharedTypes } from '@shared'
+import type { SharedLib, SharedApi, type SharedTypes } from '@shared';
 import type { TransactionsTypes } from '@widgets/transactions'
 
-export type CreateTransactionPayload = {
+export interface CreateTransactionPayload {
   categoryId: number
   amount: number
   transactionType: SharedLib.Enums.TransactionTypeEnum

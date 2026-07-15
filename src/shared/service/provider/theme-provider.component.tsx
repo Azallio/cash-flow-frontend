@@ -1,5 +1,6 @@
 import { MantineProvider } from '@mantine/core'
 import { useEffect, useState } from 'react'
+
 import { ThemeContext, type ThemeMode } from '../context/theme.context'
 
 type Props = React.PropsWithChildren<{

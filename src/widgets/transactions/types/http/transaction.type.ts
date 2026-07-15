@@ -1,6 +1,6 @@
 import type { SharedLib } from '@shared'
 
-export type Transaction = {
+export interface Transaction {
   id: number
   transactionType: SharedLib.Enums.TransactionTypeEnum
   amount: number

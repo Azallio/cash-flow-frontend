@@ -4,7 +4,7 @@ const getCookieValue = (key: string): string | null => {
   if (typeof document === 'undefined') return null
 
   const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-  const match = document.cookie.match(new RegExp(`(?:^|; )${escapedKey}=([^;]*)`))
+  const match = new RegExp(`(?:^|; )${escapedKey}=([^;]*)`).exec(document.cookie)
 
   return match ? decodeURIComponent(match[1]) : null
 }
@@ -27,6 +27,6 @@ const clearCookieValue = (key: string) => {
 
 export const CookieClient = {
   getRefreshToken: () => getCookieValue(REFRESH_TOKEN_COOKIE_KEY),
-  saveRefreshToken: (refreshToken: string) => setCookieValue(REFRESH_TOKEN_COOKIE_KEY, refreshToken),
-  clearRefreshToken: () => clearCookieValue(REFRESH_TOKEN_COOKIE_KEY),
+  saveRefreshToken: (refreshToken: string) => { setCookieValue(REFRESH_TOKEN_COOKIE_KEY, refreshToken); },
+  clearRefreshToken: () => { clearCookieValue(REFRESH_TOKEN_COOKIE_KEY); },
 }

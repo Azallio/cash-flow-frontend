@@ -1,4 +1,4 @@
-export type OverviewSummaryResponse = {
+export interface OverviewSummaryResponse {
   income: {
     current: string
     previous: string

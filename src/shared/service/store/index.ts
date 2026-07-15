@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 type BTWDate = Date | string | null
 
-type DateStore = {
+interface DateStore {
   dateFrom: Date
   dateTo: Date
   setDate: (dateFrom: BTWDate, dateTo: BTWDate) => void
@@ -20,12 +20,11 @@ export const useDateStore = create<DateStore>((set) => ({
     if (typeof dateTo === 'string') {
       dateTo = new Date(dateTo)
     }
-    if (dateFrom === null) {
-      dateFrom = new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-    }
-    if (dateTo === null) {
-      dateTo = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)
-    }
-    return set({ dateFrom, dateTo })
+
+    dateFrom ??= new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+
+    dateTo ??= new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)
+
+    set({ dateFrom, dateTo })
   },
 }))

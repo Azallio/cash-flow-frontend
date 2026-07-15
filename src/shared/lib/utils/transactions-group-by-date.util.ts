@@ -1,8 +1,8 @@
 import type { SharedTypes } from '@shared'
-import { TransactionTypeEnum } from '../enums'
+import { TransactionsLib, type TransactionsTypes } from '@widgets/transactions'
 
 export function groupTransactionsByDate(
-  transactions: Transaction[],
+  transactions: TransactionsTypes.Http.Transaction[],
 ): Map<string, SharedTypes.Ui.SparklineDataPoint> {
   const grouped = transactions.reduce<Map<string, SharedTypes.Ui.SparklineDataPoint>>((map, t) => {
     const date = t.createdAt.slice(0, 10)
@@ -12,7 +12,7 @@ export function groupTransactionsByDate(
       expense: 0,
     }
 
-    if (t.transactionType === TransactionTypeEnum.INCOME) {
+    if (t.transactionType === TransactionsLib.Enums.TransactionTypeEnum.INCOME) {
       existing.income += t.amount
     } else {
       existing.expense += t.amount

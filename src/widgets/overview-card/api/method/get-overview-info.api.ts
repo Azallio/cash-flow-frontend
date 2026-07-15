@@ -1,7 +1,7 @@
 import { SharedApi, type SharedTypes } from '@shared'
 import type { OverviewCardTypes } from '@widgets/overview-card'
 
-export type Payload = {
+export interface Payload {
   from: string
   to: string
 }

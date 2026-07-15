@@ -1,9 +1,11 @@
 import { SharedApi, type SharedTypes } from '@shared'
-import type { LoginRequest, LoginResponse } from '@units/user/type'
+import type { AuthTypes } from '@widgets/auth'
 
-export const postAuthRegister = async (payload: LoginRequest) => {
-  return await SharedApi.baseClient.post<SharedTypes.Http.BaseApiResponse<LoginResponse>>(
+export const postAuthRegister = async (payload: AuthTypes.Http.AuthLoginRequest) => {
+  const res = await SharedApi.baseClient.post<SharedTypes.Http.BaseApiResponse<SharedTypes.Http.AuthTokens>>(
     '/auth/register',
     payload,
   )
+
+  return res.data.data
 }

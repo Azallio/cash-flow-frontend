@@ -1,5 +1,6 @@
 import { type SharedTypes, SharedUi } from '@shared'
 import clsx from 'clsx'
+
 import { BudgetLib, BudgetService, BudgetUi } from '..'
 
 type Props = SharedTypes.Ui.PropsWithClassName
@@ -15,7 +16,7 @@ export const MonthlyBudget = (props: Props) => {
 
   const expensesPercent = BudgetLib.Utils.getProgressBarPercent(data?.collectedAmount, data?.targetAmount)
 
-  const progressBarWidth = `${Math.min(expensesPercent, 100)}%`
+  const progressBarWidth = `${Math.min(expensesPercent, 100).toString()}%`
 
   return (
     <SharedUi.ContentBlock className={clsx(className, 'flex h-max w-full flex-col gap-4')} {...restProps}>
@@ -36,7 +37,7 @@ export const MonthlyBudget = (props: Props) => {
               <span>Общие расходы</span>
               <div className="flex justify-between">
                 <span className="text-gray-500">
-                  {data?.collectedAmount} ₽ из {data?.targetAmount} ₽
+                  {data.collectedAmount} ₽ из {data.targetAmount} ₽
                 </span>
                 <span>{expensesPercent} %</span>
               </div>

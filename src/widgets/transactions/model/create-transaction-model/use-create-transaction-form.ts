@@ -1,12 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-
-import type { SharedLib } from '@shared'
-import type { TransactionsApi } from '@widgets/transactions'
+import type { TransactionsApi, TransactionsLib } from '@widgets/transactions'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+
 import { createTransactionSchema, type CreateTransactionFormValues } from './create-transaction.schema'
 
-type Params = {
-  transactionType: SharedLib.Enums.TransactionTypeEnum
+interface Params {
+  transactionType: TransactionsLib.Enums.TransactionTypeEnum
 
   onCreateTransaction: (payload: TransactionsApi.Methods.CreateTransactionPayload) => Promise<unknown>
 }

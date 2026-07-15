@@ -7,9 +7,9 @@ export const AuthWidget = () => {
   return (
     <section className="flex h-full items-center justify-center">
       {isRegisterMode ? (
-        <RegisterForm onBackToLoginClick={() => setIsRegisterMode(false)} />
+        <RegisterForm onBackToLoginClick={() => { setIsRegisterMode(false); }} />
       ) : (
-        <AuthForm onSignUpClick={() => setIsRegisterMode(true)} />
+        <AuthForm onSignUpClick={() => { setIsRegisterMode(true); }} />
       )}
     </section>
   )

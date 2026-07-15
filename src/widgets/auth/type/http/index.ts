@@ -1,2 +1,2 @@
 // type/http segment for auth-modal
-export {};
+export type { AuthLoginRequest } from './login-request.type';

@@ -7,7 +7,7 @@ export const useCategoriesQuery = (params: GetCategoriesParams) =>
     initialPageParam: 0,
 
     queryKey: ['categories', params],
-    queryFn: ({ pageParam = 0 }) => getCategories({ ...params, skip: pageParam }),
+    queryFn: ({ pageParam }) => getCategories({ ...params, skip: pageParam }),
 
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.items.length < 10) return undefined

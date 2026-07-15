@@ -1,7 +1,7 @@
 import { SharedLib, SharedUi } from '@shared'
 import type { useCreateCategoryForm } from '@widgets/transactions/model/create-category-model/use-create-category-form'
 
-type Props = {
+interface Props {
   isCategoryModalOpened: boolean
   setIsCategoryModalOpened: (value: boolean) => void
   categoryForm: ReturnType<typeof useCreateCategoryForm>
@@ -17,10 +17,12 @@ export function CategoryCreateModal({
   return (
     <SharedUi.Modal
       opened={isCategoryModalOpened}
-      onClose={() => setIsCategoryModalOpened(false)}
+      onClose={() => {
+        setIsCategoryModalOpened(false)
+      }}
       title="Новая категория"
     >
-      <form className="flex flex-col gap-3" onSubmit={categoryForm.submit}>
+      <form className="flex flex-col gap-3" onSubmit={() => void categoryForm.submit()}>
         <SharedUi.Input
           label="Название"
           placeholder={SharedLib.Consts.CategoryFormInputFields[0].placeholder}

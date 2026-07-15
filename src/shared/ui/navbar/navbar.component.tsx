@@ -1,5 +1,4 @@
-import { SharedLib, SharedUi, type SharedTypes } from '@shared'
-import { useTheme } from '@shared/service'
+import { SharedLib, SharedService, SharedUi, type SharedTypes } from '@shared'
 import clsx from 'clsx'
 import { NavLink } from 'react-router'
 
@@ -7,7 +6,7 @@ type Props = SharedTypes.Ui.PropsWithClassName
 
 export const Navbar = (props: Props) => {
   const { className, ...restProps } = props
-  const { mode } = useTheme()
+  const { mode } = SharedService.Hooks.useTheme()
 
   return (
     <div className={clsx(className, 'flex flex-col gap-6')} {...restProps}>

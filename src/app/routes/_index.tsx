@@ -14,16 +14,21 @@ export default function IndexRoute() {
 
   const [isDatePickerModalOpen, setIsDatePickerModalOpen] = useState(false)
 
-  const [tempDateRange, setTempDateRange] = useState<DatesRangeValue<string> | string[] | string | null>([
-    IsoDateFrom,
-    IsoDateTo,
-  ])
+  const [tempDateRange, setTempDateRange] = useState<DatesRangeValue<string>>([IsoDateFrom, IsoDateTo])
+
+  const handleDateChange = (newDateRange: DatesRangeValue<string>) => {
+    const [newFrom, newTo] = newDateRange
+    if (newFrom && newTo) {
+      setDate(new Date(newFrom), new Date(newTo))
+    }
+    setIsDatePickerModalOpen(false)
+  }
 
   return (
     <Layout>
       <div className="mb-4 flex w-full items-center justify-between">
         <div>
-          <h1 className="text-3xl">Обзор</h1>
+          <h1>Обзор</h1>
           <span className="text-md text-gray-400">
             Аналитика ваших финансов в сравнении с прошлым периодом
           </span>
@@ -36,17 +41,14 @@ export default function IndexRoute() {
             setIsDatePickerModalOpen(true)
           }}
         >
-          {IsoDateFrom !== null && IsoDateTo !== null
+          {IsoDateFrom && IsoDateTo
             ? `${SharedLib.Utils.formatDate(IsoDateFrom)} - ${SharedLib.Utils.formatDate(IsoDateTo)}`
             : 'Выбрать период'}
         </SharedUi.Button>
       </div>
-      <OverviewCardUi.OverviewCard from={IsoDateFrom ?? ''} to={IsoDateTo ?? ''} />
+      <OverviewCardUi.OverviewCard from={IsoDateFrom} to={IsoDateTo} />
       <div className="flex h-max gap-4">
-        <IncomeExpenseDynamicsChartUi.IncomeExpenseDynamicsSparkline
-          from={IsoDateFrom ?? ''}
-          to={IsoDateTo ?? ''}
-        />
+        <IncomeExpenseDynamicsChartUi.IncomeExpenseDynamicsSparkline from={IsoDateFrom} to={IsoDateTo} />
         <div className="flex w-1/3 flex-col gap-4">
           <BudgetUi.MonthlyBudget />
           <SharedUi.TopExpenseCategories />
@@ -56,18 +58,16 @@ export default function IndexRoute() {
       <SharedUi.Modal
         title="Выберите период"
         opened={isDatePickerModalOpen}
-        onClose={() => setIsDatePickerModalOpen(false)}
+        onClose={() => {
+          setIsDatePickerModalOpen(false)
+        }}
       >
         <div className="flex flex-col gap-4">
-          <SharedUi.DatePicker type="range" size="xl" value={tempDateRange} onChange={setTempDateRange} />
+          <SharedUi.DatePicker<'range'> value={tempDateRange} onChange={setTempDateRange} />
           <SharedUi.Button
             variant="color:primary size:md"
             onClick={() => {
-              setDate(
-                tempDateRange![0] !== null ? new Date(tempDateRange![0]) : null,
-                tempDateRange![1] !== null ? new Date(tempDateRange![1]) : null,
-              )
-              setIsDatePickerModalOpen(false)
+              handleDateChange(tempDateRange)
             }}
           >
             Применить

@@ -1,6 +1,5 @@
 import { SharedApi, SharedUi, type SharedTypes } from '@shared'
-import type { LoginRequest } from '@units/user/type'
-import * as AuthService from '@widgets/auth/service'
+import { AuthService, type AuthTypes } from '@widgets/auth'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -11,7 +10,7 @@ type Props = SharedTypes.Ui.PropsWithClassName<{
 
 export const RegisterForm = (props: Props) => {
   const { className, onBackToLoginClick, ...restProps } = props
-  const [formData, setFormData] = useState<LoginRequest>({ email: '', password: '' })
+  const [formData, setFormData] = useState<AuthTypes.Http.AuthLoginRequest>({ email: '', password: '' })
 
   const navigate = useNavigate()
   const {
@@ -21,17 +20,17 @@ export const RegisterForm = (props: Props) => {
     mutate: register,
   } = AuthService.Mutation.useAuthRegisterMutation()
 
-  const handleRegister = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     register(formData)
   }
 
   useEffect(() => {
-    const tokens = userData?.data.data
+    const tokens = userData
 
     if (tokens) {
       SharedApi.Clients.AnyStorageClient.saveAuthTokens(tokens)
-      navigate('/')
+      void navigate('/')
     }
   }, [userData, navigate])
 
@@ -40,7 +39,7 @@ export const RegisterForm = (props: Props) => {
       className={clsx(className, 'bg-surface flex w-109.5 flex-col gap-8 rounded-3xl px-14 py-8')}
       {...restProps}
     >
-      <h1 className="text-center text-3xl font-bold">Создать аккаунт</h1>
+      <h1 className="text-center">Создать аккаунт</h1>
 
       <form className="flex flex-col gap-4" onSubmit={handleRegister}>
         <div className="flex flex-col gap-4">
@@ -49,7 +48,9 @@ export const RegisterForm = (props: Props) => {
             placeholder="Email"
             label="Email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, email: e.target.value })
+            }}
           />
 
           <SharedUi.Input
@@ -57,7 +58,9 @@ export const RegisterForm = (props: Props) => {
             placeholder="Password"
             label="Password"
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            onChange={(e) => {
+              setFormData({ ...formData, password: e.target.value })
+            }}
           />
           {error && <span className="text-primary text-xs">{error.message}</span>}
         </div>

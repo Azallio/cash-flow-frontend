@@ -3,7 +3,7 @@ import { Consts } from '@shared/lib'
 import { ContentBlock } from '@shared/ui/content-block'
 import clsx from 'clsx'
 
-type Props = {
+interface Props {
   income: number
   expense: number
   balance: number

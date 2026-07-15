@@ -1,11 +1,14 @@
-import { TransactionTypeEnum } from '@shared/lib/enums'
+import { TransactionsLib } from '@widgets/transactions'
 
-export type TransactionFilterType = 'ALL' | TransactionTypeEnum.EXPENSE | TransactionTypeEnum.INCOME
+export type TransactionFilterType =
+  | 'ALL'
+  | TransactionsLib.Enums.TransactionTypeEnum.EXPENSE
+  | TransactionsLib.Enums.TransactionTypeEnum.INCOME
 
 export const TransactionFilterTypeOptions = [
   { value: 'ALL', label: 'Все типы' },
-  { value: TransactionTypeEnum.INCOME, label: 'Доходы' },
-  { value: TransactionTypeEnum.EXPENSE, label: 'Расходы' },
+  { value: TransactionsLib.Enums.TransactionTypeEnum.INCOME, label: 'Доходы' },
+  { value: TransactionsLib.Enums.TransactionTypeEnum.EXPENSE, label: 'Расходы' },
 ] as const
 
 export const TransactionFilterInputFields = [
@@ -21,8 +24,8 @@ export const TransactionSummaryCards = [
 ] as const
 
 export const TransactionTypeToggleOptions = [
-  { value: TransactionTypeEnum.INCOME, label: 'Доход' },
-  { value: TransactionTypeEnum.EXPENSE, label: 'Расход' },
+  { value: TransactionsLib.Enums.TransactionTypeEnum.INCOME, label: 'Доход' },
+  { value: TransactionsLib.Enums.TransactionTypeEnum.EXPENSE, label: 'Расход' },
 ] as const
 
 export const TransactionFormInputFields = [

@@ -1,5 +1,5 @@
 import { SharedService } from '@shared'
-import type { TransactionTypeEnum } from '@shared/lib/enums'
+import type { TransactionsLib } from '@widgets/transactions'
 import { useCallback, useState } from 'react'
 
 export type FilterFieldKey = 'search' | 'startDate' | 'endDate'
@@ -7,7 +7,7 @@ export type FilterFieldKey = 'search' | 'startDate' | 'endDate'
 export const useTransactionsFilters = () => {
   const { dateFrom, dateTo, setDate } = SharedService.Store.useDateStore()
 
-  const [typeFilter, setTypeFilter] = useState<TransactionTypeEnum | 'ALL'>('ALL')
+  const [typeFilter, setTypeFilter] = useState<TransactionsLib.Enums.TransactionTypeEnum | 'ALL'>('ALL')
   const [search, setSearch] = useState('')
 
   const setField = useCallback(
@@ -48,8 +48,12 @@ export const useTransactionsFilters = () => {
 
     setTypeFilter,
     setSearch,
-    setStartDate: (value: string) => setDate(new Date(value), dateTo),
-    setEndDate: (value: string) => setDate(dateFrom, new Date(value)),
+    setStartDate: (value: string) => {
+      setDate(new Date(value), dateTo)
+    },
+    setEndDate: (value: string) => {
+      setDate(dateFrom, new Date(value))
+    },
 
     setField,
     setDateRange,

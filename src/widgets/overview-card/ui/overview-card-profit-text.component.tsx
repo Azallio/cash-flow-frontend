@@ -18,7 +18,7 @@ export const ChangePercent = (props: ChangePercentProps) => {
     return inverted ? 'text-green-500' : 'text-red-500'
   })()
 
-  const text = value === 0 ? '0%' : `${value > 0 ? '+' : ''}${value}%`
+  const text = value === 0 ? '0%' : `${value > 0 ? '+' : ''}${value.toString()}%`
 
   return (
     <span className={clsx('text-sm font-medium', color, className)} {...restProps}>

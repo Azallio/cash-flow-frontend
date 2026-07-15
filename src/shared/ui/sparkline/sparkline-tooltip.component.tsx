@@ -1,21 +1,20 @@
 import { SharedLib, type SharedTypes } from '@shared'
 import clsx from 'clsx'
 
-type AccentedValues = {
+interface AccentedValues {
   name: string
   color: string
 }
 
+type SparklinePoint<T> = T extends Record<string, number | string> ? T & { date: string } : never
+
 type Props<T> = SharedTypes.Ui.PropsWithClassName<{
   accentedValues: AccentedValues[]
-  point: T extends Record<string, number | string>
-    ? T & {
-        date: string
-      }
-    : never
+  point: SparklinePoint<T>
   color: string | undefined
 }>
-export function SparklineTooltip<T>(props: Props<T>) {
+
+export function SparklineTooltip<T extends Record<string, number | string>>(props: Props<T>) {
   const { className, accentedValues, color, point, ...restProps } = props
 
   return (

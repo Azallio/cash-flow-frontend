@@ -1,6 +1,6 @@
 import { SharedApi, type SharedTypes } from '@shared'
 
-export type GetCategoriesParams = {
+export interface GetCategoriesParams {
   take: number
   skip: number
 }

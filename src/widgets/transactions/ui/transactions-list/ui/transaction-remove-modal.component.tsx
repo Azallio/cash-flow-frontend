@@ -1,6 +1,6 @@
 import { SharedUi } from '@shared'
 
-type Props = {
+interface Props {
   isOpen: boolean
   onClose: () => void
   isDeleteTransactionPending: boolean
@@ -20,7 +20,7 @@ export function TransactionRemoveModal(props: Props) {
           <SharedUi.Button
             variant="color:secondary size:md"
             type="button"
-            onClick={() => setDeleteTransactionId(null)}
+            onClick={() => { setDeleteTransactionId(null); }}
             disabled={isDeleteTransactionPending}
           >
             Отмена
