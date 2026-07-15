@@ -1,9 +1,7 @@
 import { type SharedTypes, SharedUi } from '@shared'
 import clsx from 'clsx'
 
-type Props = SharedTypes.Ui.PropsWithClassName<{
-  // Add your props here
-}>
+type Props = SharedTypes.Ui.PropsWithClassName
 
 export const TopExpenseCategories = (props: Props) => {
   const { className, ...restProps } = props

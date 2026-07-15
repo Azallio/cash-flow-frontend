@@ -3,9 +3,7 @@ import { useTheme } from '@shared/service/hook/use-theme.hook'
 import clsx from 'clsx'
 import { Icon } from '../icon/icon.component'
 
-type Props = SharedTypes.Ui.PropsWithClassName<{
-  // Add your props here
-}>
+type Props = SharedTypes.Ui.PropsWithClassName
 
 export const ThemeToggle = (props: Props) => {
   const { className, ...restProps } = props
